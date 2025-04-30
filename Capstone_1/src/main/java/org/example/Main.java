@@ -1,6 +1,9 @@
 package org.example;
 
 import org.example.Transaction;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.io.FileWriter;     // Saving to CSV
@@ -15,9 +18,8 @@ public class Main {
 
         while (running) {          // 1. Main menu loop
             System.out.println("\n~Welcome to the Ledger App~");
-            System.out.println("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-            System.out.println("\n Enter your choice: ");
-            System.out.println("B) ~> Check Balance");
+            System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+            System.out.println("\nB) ~> Check Balance");
             System.out.println("D) ~> Make Deposit");
             System.out.println("P) ~> Make Payment");
             System.out.println("L) ~> Ledger");
@@ -47,13 +49,13 @@ public class Main {
                     makePayment(scanner, transactions);
                     break;
                 case "L":   // 7. Ledger function
-                   ledgerMenu(scanner);
-                   break;
+                    ledgerMenu(scanner);
+                    break;
                 case "X":   // 8. Exit program
-                    System.out.println("\n==============================");
+                    System.out.println("\n================================");
                     System.out.println(" Thank you for using Ledger App!");
                     System.out.println("      Have a great day  ");
-                    System.out.println("==============================\n");
+                    System.out.println("================================\n");
                     running = false;   // Stops the loop
                     break;
                 default:    // 9. Error clean up
@@ -62,6 +64,7 @@ public class Main {
             }
         }
     }
+
     // 10. Ledger Menu
     private static void ledgerMenu(Scanner scanner) {
         boolean inLedgerMenu = true;
@@ -73,21 +76,57 @@ public class Main {
             System.out.println("P) ~> View Payments");
             System.out.println("R) ~> View Reports");
             System.out.println("H) ~> Main Menu");
-            System.out.print("Enter your choice: ");
             String ledgerChoice = scanner.nextLine().toUpperCase();
 
             switch (ledgerChoice) {
                 case "A":
-                    System.out.println("\nShowing all entries:");     // CSV Entries
+                    System.out.println("\nShowing all transactions:");     // CSV Entries
+                    try (BufferedReader reader = new BufferedReader(new FileReader("ledger.csv"))) {
+                        String line;
+                        while ((line = reader.readLine()) != null) {
+                            String[] parts = line.split(",");
+                            if (parts.length == 3) {
+                                System.out.println(parts[1] + ": $" + parts[0] + " at " + parts[2]);
+                            }
+                        }
+                    } catch (IOException e) {
+                        System.out.println("Unable to find ledger file.");
+                    }
                     break;
                 case "D":
                     System.out.println("\nShowing all deposits:");
+                    try (BufferedReader reader = new BufferedReader(new FileReader("ledger.csv"))) {
+                        String line;
+                        while ((line = reader.readLine()) != null) {
+                            String[] parts = line.split(",");
+                            if (parts.length == 3 && parts[1].equalsIgnoreCase("Deposit")) {
+                                String amount = parts[0];
+                                String type = parts[1];
+                                String timestamp = parts[2];
+                                System.out.println(parts[1] + ": $" + parts[0] + " at " + parts[2]);
+                            }
+                        }
+                    } catch (IOException e) {
+                        System.out.println("Unable to read ledger file.");
+                    }
                     break;
                 case "P":
                     System.out.println("\nShowing only payments:");
+                    try (BufferedReader reader = new BufferedReader(new FileReader("ledger.csv"))) {
+                        String line;
+                        while ((line = reader.readLine()) != null) {
+                            String[] parts = line.split(",");
+                            if (parts.length == 3 && parts[1].equals("Payment")) {
+                                System.out.println(parts[1] + ": $" + parts[0] + " at " + parts[2]);
+                            }
+                        }
+                    } catch (IOException e) {
+                        System.out.println("Unable to read ledger file.");
+                        e.printStackTrace();
+                    }
                     break;
                 case "R":
-                    System.out.println("\nReports menu");
+                    reportsMenu(scanner);
                     break;
                 case "H":
                     inLedgerMenu = false;
@@ -133,8 +172,69 @@ public class Main {
             e.printStackTrace();
         }
     }
-}
 
+    // 13. Reports Menu
+    private static void reportsMenu(Scanner scanner) {
+        boolean inReportsMenu = true;
+
+        while (inReportsMenu) {
+            System.out.println("\n***** Reports Menu *****");
+            System.out.println("1) ~> Month To Date");
+            System.out.println("2) ~> Previous Month");
+            System.out.println("3) ~> Yea-To-Date");
+            System.out.println("4) ~> Previous Year");
+            System.out.println("5) ~> Search by Vendor");
+            System.out.println("0) ~> Back To Ledger Menu");
+            String reportChoice = scanner.nextLine();
+
+            switch (reportChoice) {
+                case "1":
+                    System.out.println("\nMonth to date transactions: ");
+                    try (BufferedReader reader = new BufferedReader(new FileReader("ledger.csv"))) {
+                        String line;
+                        LocalDate today = LocalDate.now();
+                        LocalDate firstOfMonth = today.withDayOfMonth(1);
+
+                        while ((line = reader.readLine()) != null) {
+                            String[] parts = line.split(",");
+                            if (parts.length == 3) {
+                                String amount = parts[0];
+                                String type = parts[1];
+                                String timestamp = parts[2];
+
+                                LocalDate date = LocalDate.parse(timestamp.substring(0,10));
+                                if (!date.isBefore(firstOfMonth) && !date.isAfter(today)) {
+                                    System.out.println(type + ": $" + amount + " at " + timestamp);
+                                }
+                            }
+                        }
+                    } catch (IOException e) {
+                        System.out.println("Unable to read ledger file.");
+                        e.printStackTrace();
+                    }
+                    break;
+                case "2":
+                    System.out.println("Previous month report");
+                    break;
+                case "3":
+                    System.out.println("Year to date report");
+                    break;
+                case "4":
+                    System.out.println("Previous year report");
+                    break;
+                case "5":
+                    System.out.println("Search by vendor");
+                    break;
+                case "0":
+                    inReportsMenu = false;
+                    break;
+                default:
+                    System.out.println("Invalid choice. Try again.");
+
+            }
+        }
+    }
+}
 
 
 

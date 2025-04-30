@@ -4,9 +4,9 @@ import java.time.LocalDateTime;
 
 public class Transaction {
     // 1. Variables
-    private String amount;
-    private String type;
-    private LocalDateTime timestamp;
+    private final String amount;
+    private final String type;
+    private final LocalDateTime timestamp;
 
     // 2. Constructor
     public Transaction(String amount, String type) {
