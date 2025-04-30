@@ -7,11 +7,13 @@ public class Transaction {
     private final String amount;
     private final String type;
     private final LocalDateTime timestamp;
+    private final String description;
 
     // 2. Constructor
-    public Transaction(String amount, String type) {
+    public Transaction(String amount, String type, String description) {
         this.amount = amount;
         this.type = type;
+        this.description = description;
         this.timestamp = LocalDateTime.now();
     }
 
@@ -28,5 +30,10 @@ public class Transaction {
     // 5. Getter for timestamp
     public LocalDateTime getTimestamp() {
         return timestamp;
+    }
+
+    // 6. Getter for description
+    public String getDescription() {
+        return description;
     }
 }

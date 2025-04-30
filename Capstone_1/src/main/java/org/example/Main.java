@@ -4,6 +4,7 @@ import org.example.Transaction;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.io.FileWriter;     // Saving to CSV
@@ -85,8 +86,12 @@ public class Main {
                         String line;
                         while ((line = reader.readLine()) != null) {
                             String[] parts = line.split(",");
-                            if (parts.length == 3) {
-                                System.out.println(parts[1] + ": $" + parts[0] + " at " + parts[2]);
+                            if (parts.length == 4) {
+                                String amount = parts[0];
+                                String type = parts[1];
+                                String description = parts[2];
+                                String timestamp = parts[3];
+                                System.out.println(type + ": $" + amount + " for \"" + description + "\" at " + timestamp);
                             }
                         }
                     } catch (IOException e) {
@@ -99,11 +104,10 @@ public class Main {
                         String line;
                         while ((line = reader.readLine()) != null) {
                             String[] parts = line.split(",");
-                            if (parts.length == 3 && parts[1].equalsIgnoreCase("Deposit")) {
+                            if (parts.length == 4 && parts[1].equalsIgnoreCase("Deposit")) {
                                 String amount = parts[0];
                                 String type = parts[1];
-                                String timestamp = parts[2];
-                                System.out.println(parts[1] + ": $" + parts[0] + " at " + parts[2]);
+
                             }
                         }
                     } catch (IOException e) {
@@ -116,8 +120,12 @@ public class Main {
                         String line;
                         while ((line = reader.readLine()) != null) {
                             String[] parts = line.split(",");
-                            if (parts.length == 3 && parts[1].equals("Payment")) {
-                                System.out.println(parts[1] + ": $" + parts[0] + " at " + parts[2]);
+                            if (parts.length == 4 && parts[1].equalsIgnoreCase("Payment")) {
+                                String amount = parts[0];
+                                String type = parts[1];
+                                String description = parts[2];
+                                String timestamp = parts[3];
+                                System.out.println(type + ": $" + amount + " for \"" + description + "\" at " + timestamp);
                             }
                         }
                     } catch (IOException e) {
@@ -143,13 +151,18 @@ public class Main {
     private static void makeDeposit(Scanner scanner, ArrayList<Transaction> transactions) {
         System.out.println("Enter deposit amount: ");
         String depositAmount = scanner.nextLine();
-        Transaction deposit = new Transaction(depositAmount, "Deposit");
+
+        System.out.print("Enter deposit description/vendor: ");
+        String description = scanner.nextLine();
+
+        Transaction deposit = new Transaction(depositAmount, "Deposit", description);
         transactions.add(deposit);
-        System.out.println("You have deposited: $" + depositAmount);
+
+        System.out.println("You have deposited: $" + depositAmount + " for \"" + description + "\"");
 
         // CSV Saving
         try (FileWriter writer = new FileWriter("ledger.csv", true)) {
-            writer.write(depositAmount + ",Deposit," + deposit.getTimestamp() + "\n");
+            writer.write(depositAmount + ",Deposit," + description + deposit.getTimestamp() + "\n");
         } catch (IOException e) {
             System.out.println("An error occurred while saving the deposit.");
             e.printStackTrace();
@@ -160,13 +173,17 @@ public class Main {
     private static void makePayment(Scanner scanner, ArrayList<Transaction> transactions) {
         System.out.println("Enter payment amount: ");
         String paymentAmount = scanner.nextLine();
-        Transaction payment = new Transaction(paymentAmount, "Payment");
+
+        System.out.print("Enter payment description/vendor: ");
+        String description = scanner.nextLine();
+
+        Transaction payment = new Transaction(paymentAmount, "Payment", description);
         transactions.add(payment);
         System.out.println("You paid: $" + paymentAmount);
 
         // CSV Saving
         try (FileWriter writer = new FileWriter("ledger.csv", true)) {
-            writer.write(paymentAmount + ",Payment," + payment.getTimestamp() + "\n");
+            writer.write(paymentAmount + ",Payment," + description + payment.getTimestamp() +  "," + description + "\n");
         } catch (IOException e) {
             System.out.println("An error occurred while saving the payment.");
             e.printStackTrace();
@@ -214,16 +231,108 @@ public class Main {
                     }
                     break;
                 case "2":
-                    System.out.println("Previous month report");
+                    System.out.println("\nPrevious month transactions:");
+                    try (BufferedReader reader = new BufferedReader(new FileReader("ledger.csv"))) {
+                        String line;
+                        LocalDate today = LocalDate.now();
+                        LocalDate firstOfThisMonth = today.withDayOfMonth(1);
+                        LocalDate firstOfLastMonth = firstOfThisMonth.minusMonths(1);
+                        LocalDate lastOfLastMonth = firstOfThisMonth.minusDays(1);
+
+                        while ((line = reader.readLine()) != null) {
+                            String[] parts = line.split(",");
+                            if (parts.length == 3) {
+                                String amount = parts[0];
+                                String type = parts[1];
+                                String timestamp = parts[2];
+
+                                LocalDate date = LocalDate.parse(timestamp.substring(0, 10));
+                                if (!date.isBefore(firstOfLastMonth) && !date.isAfter(lastOfLastMonth)) {
+                                    System.out.println(type + ": $" + amount + " at " + timestamp);
+                                }
+                            }
+                        }
+                    } catch (IOException e) {
+                        System.out.println("Unable to read ledger file.");
+                        e.printStackTrace();
+                    }
                     break;
                 case "3":
-                    System.out.println("Year to date report");
+                    System.out.println("\nYear to date Transactions: ");
+                    try (BufferedReader reader = new BufferedReader(new FileReader("ledger.csv"))) {
+                        String line;
+                        LocalDate today = LocalDate.now();
+                        LocalDate firstOfYear = today.withDayOfYear(1);
+
+                        while ((line = reader.readLine()) != null) {
+                            String[] parts = line.split(",");
+                            if (parts.length == 3) {
+                                String amount = parts[0];
+                                String type = parts[1];
+                                String timestamp = parts[2];
+
+                                LocalDate date = LocalDate.parse(timestamp.substring(0, 10));
+                                if (!date.isBefore(firstOfYear) && !date.isAfter(today)) {
+                                    System.out.println(type + ": $" + amount + " at " + timestamp);
+                                }
+                            }
+                        }
+                    } catch (IOException e) {
+                        System.out.println("Unable to read ledger file.");
+                        e.printStackTrace();
+                    }
                     break;
                 case "4":
-                    System.out.println("Previous year report");
+                    System.out.println("\nPrevious year transactions: ");
+                    try (BufferedReader reader = new BufferedReader(new FileReader("ledger.csv"))) {
+                        String line;
+                        LocalDate today = LocalDate.now();
+                        int lastYear = today.getYear() - 1;
+                        LocalDate start = LocalDate.of(lastYear, 1, 1);
+                        LocalDate end = LocalDate.of(lastYear, 12, 31);
+
+                        while ((line = reader.readLine()) != null) {
+                            String[] parts = line.split(",");
+                            if (parts.length == 3) {
+                                String amount = parts[0];
+                                String type = parts[1];
+                                String timestamp = parts[2];
+
+                                LocalDate date = LocalDate.parse(timestamp.substring(0, 10));
+                                if (!date.isBefore(start) && !date.isAfter(end)) {
+                                    System.out.println(type + ": $" + amount + " at " + timestamp);
+                                }
+                            }
+                        }
+                    } catch (IOException e) {
+                        System.out.println("Unable to read ledger file.");
+                        e.printStackTrace();
+                    }
                     break;
                 case "5":
-                    System.out.println("Search by vendor");
+                    System.out.println("\nSearch by vendor name: ");
+                    String vendorSearch = scanner.nextLine().toLowerCase();
+
+                    System.out.println("\nTransactions from vendor: " + vendorSearch);
+
+                    try (BufferedReader reader = new BufferedReader(new FileReader("ledger.csv"))) {
+                        String line;
+                        while ((line = reader.readLine()) != null) {
+                            String[] parts = line.split(",");
+                            if (parts.length == 3) {
+                                String amount = parts[0];
+                                String type = parts[1];
+                                String timestamp = parts[2];
+
+                                if (type.toLowerCase().contains(vendorSearch)) {
+                                    System.out.println(type + ": $" + amount + " at " + timestamp);
+                                }
+                            }
+                        }
+                    } catch (IOException e) {
+                        System.out.println("Unable to read ledger file.");
+                        e.printStackTrace();
+                    }
                     break;
                 case "0":
                     inReportsMenu = false;
