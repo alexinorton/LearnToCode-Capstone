@@ -38,11 +38,11 @@ Collections.reverse(lines);
 ```
 
 ## Screenshots of Application
-![img.png](img.png)
+![img.png](/Capstone%20images/img.png)
 
-![img_1.png](img_1.png)
+![img_1.png](/Capstone%20images/img_1.png)
 
-![img_2.png](img_2.png)
+![img_2.png](/Capstone%20images/img_2.png)
 
 
 ## Resources Used

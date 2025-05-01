@@ -106,12 +106,13 @@ public class Main {
 
                         for (String reversedLine : lines) {
                             String[] parts = reversedLine.split("\\|");
-                            if (parts.length == 4) {
+                            if (parts.length == 5) {
                                 String date = parts[0];
                                 String time = parts[1];
                                 String description = parts[2];
                                 String vendor = parts[3];
                                 String amount = parts[4];
+
                                 System.out.printf("%-12s %-10s %-20s %-15s $%-10s%n", date, time, description, vendor, amount);
                             }
                         }
@@ -175,8 +176,11 @@ public class Main {
         System.out.println("Enter deposit amount: ");
         String depositAmount = scanner.nextLine();
 
-        System.out.print("Enter deposit description/vendor: ");
+        System.out.print("Enter deposit description: ");
         String description = scanner.nextLine();
+
+        System.out.print("Enter deposit vendor: ");
+        String vendor = scanner.nextLine();
 
         Transaction deposit = new Transaction(depositAmount, "Deposit", description);
 
@@ -185,7 +189,7 @@ public class Main {
         // CSV Saving
         try (FileWriter writer = new FileWriter("ledger.csv", true)) {
             String[] timestampParts = deposit.getTimestamp().toString().split("T");
-            writer.write(timestampParts[0] + "|" + timestampParts[1] + "|" + description + "|Deposit|" + depositAmount + "\n");
+            writer.write(timestampParts[0] + "|" + timestampParts[1] + "|" + description + "|" + vendor + "|" + depositAmount + "\n");
         } catch (IOException e) {
             System.out.println("An error occurred while saving the deposit.");
             e.printStackTrace();
@@ -197,8 +201,11 @@ public class Main {
         System.out.println("Enter payment amount: ");
         String paymentAmount = scanner.nextLine();
 
-        System.out.print("Enter payment description/vendor: ");
+        System.out.print("Enter payment description: ");
         String description = scanner.nextLine();
+
+        System.out.print("Enter payment vendor: ");
+        String vendor = scanner.nextLine();
 
         Transaction payment = new Transaction(paymentAmount, "Payment", description);
         System.out.println("You paid: $" + paymentAmount);
@@ -206,7 +213,7 @@ public class Main {
         // CSV Saving
         try (FileWriter writer = new FileWriter("ledger.csv", true)) {
             String[] timestampParts = payment.getTimestamp().toString().split("T");
-            writer.write(timestampParts[0] + "|" + timestampParts[1] + "|" + description + "|Payment|" + paymentAmount + "\n");
+            writer.write(timestampParts[0] + "|" + timestampParts[1] + "|" + description + "|" + vendor + "|" + paymentAmount + "\n");
         } catch (IOException e) {
             System.out.println("An error occurred while saving the payment.");
             e.printStackTrace();
