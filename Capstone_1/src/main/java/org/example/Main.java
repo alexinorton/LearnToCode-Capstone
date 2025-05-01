@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import java.io.FileWriter;     // Saving to CSV
 import java.io.IOException;    // Error control
+import java.util.Collections;  // Reverse order
 
 public class Main {
 
@@ -33,15 +34,25 @@ public class Main {
             switch (choice.toUpperCase()) {
                 case "B":   // 4. Check Balance
                     double balance = 0.00;
-                    for (Transaction t : transactions) {
-                        if (t.getType().equalsIgnoreCase("Deposit")) {
-                            balance += Double.parseDouble(t.getAmount());
-                        } else if (t.getType().equalsIgnoreCase("Payment")) {
-                            balance -= Double.parseDouble(t.getAmount());
+                    try (BufferedReader reader = new BufferedReader(new FileReader("ledger.csv"))) {
+                        String line;
+                        while ((line = reader.readLine()) != null) {
+                            String[] parts = line.split("\\|");
+                            if (parts.length == 5) {
+                                String amount = parts[4];
+                                String type = parts[3];
+                                if (type.equalsIgnoreCase("Deposit")) {
+                                    balance += Double.parseDouble(amount);
+                                } else if (type.equalsIgnoreCase("Payment")) {
+                                    balance -= Double.parseDouble(amount);
+                                }
+                            }
                         }
+                        System.out.printf("Your Balance is: $%.2f%n", balance);
+                    } catch (IOException e) {
+                        System.out.println("Unable to calculate balance.");
+                        e.printStackTrace();
                     }
-                    System.out.printf("Your Balance is: $%.2f%n", balance);
-                    scanner.nextLine();
                     break;
                 case "D":   // 5. Deposit function
                     makeDeposit(scanner, transactions);
@@ -84,14 +95,24 @@ public class Main {
                     System.out.println("\nShowing all transactions:");     // CSV Entries
                     try (BufferedReader reader = new BufferedReader(new FileReader("ledger.csv"))) {
                         String line;
+                        ArrayList<String> lines = new ArrayList<>();
                         while ((line = reader.readLine()) != null) {
-                            String[] parts = line.split(",");
+                            lines.add(line);
+                        }
+                        Collections.reverse(lines);  // Newest transactions first
+
+                        System.out.printf("%-12s %-10s %-20s %-15s %-10s%n", "DATE", "TIME", "DESCRIPTION", "VENDOR", "AMOUNT");
+                        System.out.println("--------------------------------------------------------------");
+
+                        for (String reversedLine : lines) {
+                            String[] parts = reversedLine.split("\\|");
                             if (parts.length == 4) {
-                                String amount = parts[0];
-                                String type = parts[1];
+                                String date = parts[0];
+                                String time = parts[1];
                                 String description = parts[2];
-                                String timestamp = parts[3];
-                                System.out.println(type + ": $" + amount + " for \"" + description + "\" at " + timestamp);
+                                String vendor = parts[3];
+                                String amount = parts[4];
+                                System.out.printf("%-12s %-10s %-20s %-15s $%-10s%n", date, time, description, vendor, amount);
                             }
                         }
                     } catch (IOException e) {
@@ -103,11 +124,13 @@ public class Main {
                     try (BufferedReader reader = new BufferedReader(new FileReader("ledger.csv"))) {
                         String line;
                         while ((line = reader.readLine()) != null) {
-                            String[] parts = line.split(",");
-                            if (parts.length == 4 && parts[1].equalsIgnoreCase("Deposit")) {
-                                String amount = parts[0];
-                                String type = parts[1];
-
+                            String[] parts = line.split("\\|");
+                            if (parts.length == 5 && parts[3].equalsIgnoreCase("Deposit")) { // or "Payment"
+                                String amount = parts[4];
+                                String description = parts[2];
+                                String date = parts[0];
+                                String time = parts[1];
+                                System.out.printf("%-12s %-10s %-20s $%-10s%n", date, time, description, amount);
                             }
                         }
                     } catch (IOException e) {
@@ -119,13 +142,13 @@ public class Main {
                     try (BufferedReader reader = new BufferedReader(new FileReader("ledger.csv"))) {
                         String line;
                         while ((line = reader.readLine()) != null) {
-                            String[] parts = line.split(",");
-                            if (parts.length == 4 && parts[1].equalsIgnoreCase("Payment")) {
-                                String amount = parts[0];
-                                String type = parts[1];
+                            String[] parts = line.split("\\|");
+                            if (parts.length == 5 && parts[3].equalsIgnoreCase("Deposit")) { // or "Payment"
+                                String amount = parts[4];
                                 String description = parts[2];
-                                String timestamp = parts[3];
-                                System.out.println(type + ": $" + amount + " for \"" + description + "\" at " + timestamp);
+                                String date = parts[0];
+                                String time = parts[1];
+                                System.out.printf("%-12s %-10s %-20s $%-10s%n", date, time, description, amount);
                             }
                         }
                     } catch (IOException e) {
@@ -156,13 +179,13 @@ public class Main {
         String description = scanner.nextLine();
 
         Transaction deposit = new Transaction(depositAmount, "Deposit", description);
-        transactions.add(deposit);
 
         System.out.println("You have deposited: $" + depositAmount + " for \"" + description + "\"");
 
         // CSV Saving
         try (FileWriter writer = new FileWriter("ledger.csv", true)) {
-            writer.write(depositAmount + ",Deposit," + description + deposit.getTimestamp() + "\n");
+            String[] timestampParts = deposit.getTimestamp().toString().split("T");
+            writer.write(timestampParts[0] + "|" + timestampParts[1] + "|" + description + "|Deposit|" + depositAmount + "\n");
         } catch (IOException e) {
             System.out.println("An error occurred while saving the deposit.");
             e.printStackTrace();
@@ -178,12 +201,12 @@ public class Main {
         String description = scanner.nextLine();
 
         Transaction payment = new Transaction(paymentAmount, "Payment", description);
-        transactions.add(payment);
         System.out.println("You paid: $" + paymentAmount);
 
         // CSV Saving
         try (FileWriter writer = new FileWriter("ledger.csv", true)) {
-            writer.write(paymentAmount + ",Payment," + description + payment.getTimestamp() +  "," + description + "\n");
+            String[] timestampParts = payment.getTimestamp().toString().split("T");
+            writer.write(timestampParts[0] + "|" + timestampParts[1] + "|" + description + "|Payment|" + paymentAmount + "\n");
         } catch (IOException e) {
             System.out.println("An error occurred while saving the payment.");
             e.printStackTrace();
@@ -198,11 +221,11 @@ public class Main {
             System.out.println("\n***** Reports Menu *****");
             System.out.println("1) ~> Month To Date");
             System.out.println("2) ~> Previous Month");
-            System.out.println("3) ~> Yea-To-Date");
+            System.out.println("3) ~> Year-To-Date");
             System.out.println("4) ~> Previous Year");
             System.out.println("5) ~> Search by Vendor");
             System.out.println("0) ~> Back To Ledger Menu");
-            String reportChoice = scanner.nextLine();
+            String reportChoice = scanner.nextLine().toUpperCase();
 
             switch (reportChoice) {
                 case "1":
@@ -213,15 +236,17 @@ public class Main {
                         LocalDate firstOfMonth = today.withDayOfMonth(1);
 
                         while ((line = reader.readLine()) != null) {
-                            String[] parts = line.split(",");
-                            if (parts.length == 3) {
-                                String amount = parts[0];
-                                String type = parts[1];
-                                String timestamp = parts[2];
+                            String[] parts = line.split("\\|");
+                            if (parts.length == 5) {
+                                String dateStr = parts[0];
+                                String time = parts[1];
+                                String description = parts[2];
+                                String vendor = parts[3];
+                                String amount = parts[4];
 
-                                LocalDate date = LocalDate.parse(timestamp.substring(0,10));
+                                LocalDate date = LocalDate.parse(dateStr);
                                 if (!date.isBefore(firstOfMonth) && !date.isAfter(today)) {
-                                    System.out.println(type + ": $" + amount + " at " + timestamp);
+                                    System.out.printf("%-12s %-10s %-20s %-15s $%-10s%n", dateStr, time, description, vendor, amount);
                                 }
                             }
                         }
@@ -240,15 +265,17 @@ public class Main {
                         LocalDate lastOfLastMonth = firstOfThisMonth.minusDays(1);
 
                         while ((line = reader.readLine()) != null) {
-                            String[] parts = line.split(",");
-                            if (parts.length == 3) {
-                                String amount = parts[0];
-                                String type = parts[1];
-                                String timestamp = parts[2];
+                            String[] parts = line.split("\\|");
+                            if (parts.length == 5) {
+                                String dateStr = parts[0];
+                                String time = parts[1];
+                                String description = parts[2];
+                                String vendor = parts[3];
+                                String amount = parts[4];
 
-                                LocalDate date = LocalDate.parse(timestamp.substring(0, 10));
+                                LocalDate date = LocalDate.parse(dateStr);
                                 if (!date.isBefore(firstOfLastMonth) && !date.isAfter(lastOfLastMonth)) {
-                                    System.out.println(type + ": $" + amount + " at " + timestamp);
+                                    System.out.printf("%-12s %-10s %-20s %-15s $%-10s%n", dateStr, time, description, vendor, amount);
                                 }
                             }
                         }
@@ -265,15 +292,17 @@ public class Main {
                         LocalDate firstOfYear = today.withDayOfYear(1);
 
                         while ((line = reader.readLine()) != null) {
-                            String[] parts = line.split(",");
-                            if (parts.length == 3) {
-                                String amount = parts[0];
-                                String type = parts[1];
-                                String timestamp = parts[2];
+                            String[] parts = line.split("\\|");
+                            if (parts.length == 5) {
+                                String dateStr = parts[0];
+                                String time = parts[1];
+                                String description = parts[2];
+                                String vendor = parts[3];
+                                String amount = parts[4];
 
-                                LocalDate date = LocalDate.parse(timestamp.substring(0, 10));
+                                LocalDate date = LocalDate.parse(dateStr);
                                 if (!date.isBefore(firstOfYear) && !date.isAfter(today)) {
-                                    System.out.println(type + ": $" + amount + " at " + timestamp);
+                                    System.out.printf("%-12s %-10s %-20s %-15s $%-10s%n", dateStr, time, description, vendor, amount);
                                 }
                             }
                         }
@@ -292,15 +321,17 @@ public class Main {
                         LocalDate end = LocalDate.of(lastYear, 12, 31);
 
                         while ((line = reader.readLine()) != null) {
-                            String[] parts = line.split(",");
-                            if (parts.length == 3) {
-                                String amount = parts[0];
-                                String type = parts[1];
-                                String timestamp = parts[2];
+                            String[] parts = line.split("\\|");
+                            if (parts.length == 5) {
+                                String dateStr = parts[0];
+                                String time = parts[1];
+                                String description = parts[2];
+                                String vendor = parts[3];
+                                String amount = parts[4];
 
-                                LocalDate date = LocalDate.parse(timestamp.substring(0, 10));
+                                LocalDate date = LocalDate.parse(dateStr);
                                 if (!date.isBefore(start) && !date.isAfter(end)) {
-                                    System.out.println(type + ": $" + amount + " at " + timestamp);
+                                    System.out.printf("%-12s %-10s %-20s %-15s $%-10s%n", dateStr, time, description, vendor, amount);
                                 }
                             }
                         }
@@ -318,14 +349,16 @@ public class Main {
                     try (BufferedReader reader = new BufferedReader(new FileReader("ledger.csv"))) {
                         String line;
                         while ((line = reader.readLine()) != null) {
-                            String[] parts = line.split(",");
-                            if (parts.length == 3) {
-                                String amount = parts[0];
-                                String type = parts[1];
-                                String timestamp = parts[2];
+                            String[] parts = line.split("\\|");
+                            if (parts.length == 5) {
+                                String dateStr = parts[0];
+                                String time = parts[1];
+                                String description = parts[2];
+                                String vendor = parts[3];
+                                String amount = parts[4];
 
-                                if (type.toLowerCase().contains(vendorSearch)) {
-                                    System.out.println(type + ": $" + amount + " at " + timestamp);
+                                if (vendor.toLowerCase().contains(vendorSearch)) {
+                                    System.out.printf("%-12s %-10s %-20s %-15s $%-10s%n", dateStr, time, description, vendor, amount);
                                 }
                             }
                         }
