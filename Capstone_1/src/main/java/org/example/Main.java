@@ -1,15 +1,15 @@
 package org.example;
 
 import org.example.Transaction;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Scanner;
-import java.io.FileWriter;     // Saving to CSV
-import java.io.IOException;    // Error control
-import java.util.Collections;  // Reverse order
+import java.io.BufferedReader;  // Read files
+import java.io.FileReader;      // Write data to a file
+import java.time.LocalDate;     // Get current date
+import java.time.LocalDateTime; // Get current date and time
+import java.util.ArrayList;     // Store list of transactions
+import java.util.Scanner;       // Read user input
+import java.io.FileWriter;      // Saving to CSV
+import java.io.IOException;     // Error control
+import java.util.Collections;   // Reverse order
 
 public class Main {
 
@@ -18,7 +18,7 @@ public class Main {
         ArrayList<Transaction> transactions = new ArrayList<>();
         boolean running = true;     // Keeps program running the loop
 
-        while (running) {          // 1. Main menu loop
+        while (running) {          // Main menu loop
             System.out.println("\n~Welcome to the Ledger App~");
             System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~");
             System.out.println("\nB) ~> Check Balance");
@@ -27,10 +27,10 @@ public class Main {
             System.out.println("L) ~> Ledger");
             System.out.println("X) ~> Exit");
 
-            // 2. Capture use input:
+            // Capture use input:
             String choice = scanner.nextLine();
 
-            // 3. Process user input
+            // Process user input
             switch (choice.toUpperCase()) {
                 case "B":   // 4. Check Balance
                     double balance = 0.00;
@@ -40,7 +40,7 @@ public class Main {
                             String[] parts = line.split("\\|");
                             if (parts.length == 5) {
                                 String amount = parts[4];
-                                String type = parts[3];
+                                String type = parts[2];
                                 if (type.equalsIgnoreCase("Deposit")) {
                                     balance += Double.parseDouble(amount);
                                 } else if (type.equalsIgnoreCase("Payment")) {
@@ -54,30 +54,30 @@ public class Main {
                         e.printStackTrace();
                     }
                     break;
-                case "D":   // 5. Deposit function
+                case "D":   // Deposit function
                     makeDeposit(scanner, transactions);
                     break;
-                case "P":   // 6. Payment function
+                case "P":   // Payment function
                     makePayment(scanner, transactions);
                     break;
-                case "L":   // 7. Ledger function
+                case "L":   // Ledger function
                     ledgerMenu(scanner);
                     break;
-                case "X":   // 8. Exit program
+                case "X":   // Exit program
                     System.out.println("\n================================");
                     System.out.println(" Thank you for using Ledger App!");
                     System.out.println("      Have a great day  ");
                     System.out.println("================================\n");
                     running = false;   // Stops the loop
                     break;
-                default:    // 9. Error clean up
+                default:    // Error clean up
                     System.out.println("Invalid choice. Please try again.");
 
             }
         }
     }
 
-    // 10. Ledger Menu
+    // Ledger Menu
     private static void ledgerMenu(Scanner scanner) {
         boolean inLedgerMenu = true;
 
@@ -91,7 +91,7 @@ public class Main {
             String ledgerChoice = scanner.nextLine().toUpperCase();
 
             switch (ledgerChoice) {
-                case "A":
+                case "A":     // View Transactions
                     System.out.println("\nShowing all transactions:");     // CSV Entries
                     try (BufferedReader reader = new BufferedReader(new FileReader("ledger.csv"))) {
                         String line;
@@ -101,7 +101,7 @@ public class Main {
                         }
                         Collections.reverse(lines);  // Newest transactions first
 
-                        System.out.printf("%-12s %-10s %-20s %-15s %-10s%n", "DATE", "TIME", "DESCRIPTION", "VENDOR", "AMOUNT");
+                        System.out.printf("%-12s %-10s %-20s %-15s $%-10s%n", "Date", "Time", "Description", "Vendor", "Amount");
                         System.out.println("--------------------------------------------------------------");
 
                         for (String reversedLine : lines) {
@@ -120,36 +120,38 @@ public class Main {
                         System.out.println("Unable to find ledger file.");
                     }
                     break;
-                case "D":
+                case "D":     // View Deposits
                     System.out.println("\nShowing all deposits:");
                     try (BufferedReader reader = new BufferedReader(new FileReader("ledger.csv"))) {
                         String line;
                         while ((line = reader.readLine()) != null) {
                             String[] parts = line.split("\\|");
-                            if (parts.length == 5 && parts[3].equalsIgnoreCase("Deposit")) { // or "Payment"
+                            if (parts.length == 5 && parts[2].equalsIgnoreCase("Deposit")) { // or "Payment"
                                 String amount = parts[4];
                                 String description = parts[2];
                                 String date = parts[0];
                                 String time = parts[1];
-                                System.out.printf("%-12s %-10s %-20s $%-10s%n", date, time, description, amount);
+                                String vendor = parts[3];
+                                System.out.printf("%-12s %-10s %-20s %-15s $%-10s%n", date, time, description, vendor, amount);
                             }
                         }
                     } catch (IOException e) {
                         System.out.println("Unable to read ledger file.");
                     }
                     break;
-                case "P":
+                case "P":     // View Payments
                     System.out.println("\nShowing only payments:");
                     try (BufferedReader reader = new BufferedReader(new FileReader("ledger.csv"))) {
                         String line;
                         while ((line = reader.readLine()) != null) {
                             String[] parts = line.split("\\|");
-                            if (parts.length == 5 && parts[3].equalsIgnoreCase("Deposit")) { // or "Payment"
+                            if (parts.length == 5 && parts[2].equalsIgnoreCase("Payment")) { // or "Payment"
                                 String amount = parts[4];
                                 String description = parts[2];
                                 String date = parts[0];
                                 String time = parts[1];
-                                System.out.printf("%-12s %-10s %-20s $%-10s%n", date, time, description, amount);
+                                String vendor = parts[3];
+                                System.out.printf("%-12s %-10s %-20s %-15s $%-10s%n", date, time, description, vendor, amount);
                             }
                         }
                     } catch (IOException e) {
@@ -157,10 +159,10 @@ public class Main {
                         e.printStackTrace();
                     }
                     break;
-                case "R":
+                case "R":     // View Reports menu
                     reportsMenu(scanner);
                     break;
-                case "H":
+                case "H":     // Home menu
                     inLedgerMenu = false;
                     break;
                 default:
@@ -171,7 +173,8 @@ public class Main {
         }
     }
 
-    // 11. New method: Make Deposit
+
+    // New method: Make Deposit
     private static void makeDeposit(Scanner scanner, ArrayList<Transaction> transactions) {
         System.out.println("Enter deposit amount: ");
         String depositAmount = scanner.nextLine();
@@ -196,7 +199,7 @@ public class Main {
         }
     }
 
-    // 12. New method: Make Payment
+    // New method: Make Payment
     private static void makePayment(Scanner scanner, ArrayList<Transaction> transactions) {
         System.out.println("Enter payment amount: ");
         String paymentAmount = scanner.nextLine();
@@ -220,7 +223,7 @@ public class Main {
         }
     }
 
-    // 13. Reports Menu
+    // Reports Menu
     private static void reportsMenu(Scanner scanner) {
         boolean inReportsMenu = true;
 
@@ -235,8 +238,11 @@ public class Main {
             String reportChoice = scanner.nextLine().toUpperCase();
 
             switch (reportChoice) {
-                case "1":
-                    System.out.println("\nMonth to date transactions: ");
+                case "1":     // Month to date
+                    System.out.println("\nMonth to date transactions:");
+                    System.out.printf("%-12s %-10s %-20s %-15s $%-10s%n", "Date", "Time", "Description", "Vendor", "Amount");
+                    System.out.println("----------------------------------------------------------------");
+
                     try (BufferedReader reader = new BufferedReader(new FileReader("ledger.csv"))) {
                         String line;
                         LocalDate today = LocalDate.now();
@@ -262,8 +268,11 @@ public class Main {
                         e.printStackTrace();
                     }
                     break;
-                case "2":
+                case "2":     // Previous month
                     System.out.println("\nPrevious month transactions:");
+                    System.out.printf("%-12s %-10s %-20s %-15s $%-10s%n", "Date", "Time", "Description", "Vendor", "Amount");
+                    System.out.println("----------------------------------------------------------------");
+
                     try (BufferedReader reader = new BufferedReader(new FileReader("ledger.csv"))) {
                         String line;
                         LocalDate today = LocalDate.now();
@@ -291,8 +300,11 @@ public class Main {
                         e.printStackTrace();
                     }
                     break;
-                case "3":
-                    System.out.println("\nYear to date Transactions: ");
+                case "3":     // Year to date
+                    System.out.println("\nYear to date transactions:");
+                    System.out.printf("%-12s %-10s %-20s %-15s $%-10s%n", "Date", "Time", "Description", "Vendor", "Amount");
+                    System.out.println("----------------------------------------------------------------");
+
                     try (BufferedReader reader = new BufferedReader(new FileReader("ledger.csv"))) {
                         String line;
                         LocalDate today = LocalDate.now();
@@ -318,8 +330,11 @@ public class Main {
                         e.printStackTrace();
                     }
                     break;
-                case "4":
-                    System.out.println("\nPrevious year transactions: ");
+                case "4":     // Previous year
+                    System.out.println("\nPrevious year transactions:");
+                    System.out.printf("%-12s %-10s %-20s %-15s $%-10s%n", "Date", "Time", "Description", "Vendor", "Amount");
+                    System.out.println("----------------------------------------------------------------");
+
                     try (BufferedReader reader = new BufferedReader(new FileReader("ledger.csv"))) {
                         String line;
                         LocalDate today = LocalDate.now();
@@ -347,11 +362,13 @@ public class Main {
                         e.printStackTrace();
                     }
                     break;
-                case "5":
+                case "5":     // Search by vendor
                     System.out.println("\nSearch by vendor name: ");
                     String vendorSearch = scanner.nextLine().toLowerCase();
 
                     System.out.println("\nTransactions from vendor: " + vendorSearch);
+                    System.out.printf("%-12s %-10s %-20s %-15s $%-10s%n", "Date", "Time", "Description", "Vendor", "Amount");
+                    System.out.println("----------------------------------------------------------------");
 
                     try (BufferedReader reader = new BufferedReader(new FileReader("ledger.csv"))) {
                         String line;
@@ -374,7 +391,7 @@ public class Main {
                         e.printStackTrace();
                     }
                     break;
-                case "0":
+                case "0":     // Returns to Ledger menu
                     inReportsMenu = false;
                     break;
                 default:
