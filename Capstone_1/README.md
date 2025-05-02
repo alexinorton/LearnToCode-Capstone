@@ -1,14 +1,14 @@
 Ledger App
 
 This is an accounting ledger built in Java as part of my Capstone 1 project at Year Up.  
-The app allows you to manage financial transactions by recording deposits, payments, and reports all saved in an organized CSV file.
+The app allows you to manage financial ledgerEntries by recording deposits, payments, and reports all saved in an organized CSV file.
 
 ---
 
 ## Features
 
 - Add deposits and payments
-- View all transactions
+- View all ledgerEntries
 - Filter by deposits or payments
 - Check balance
 - Reports:
@@ -21,13 +21,13 @@ The app allows you to manage financial transactions by recording deposits, payme
 ---
 
 ## File Format
-All transactions are saved in a CSV file using this format: 
+All ledgerEntries are saved in a CSV file using this format: 
 ```
 date|time|description|vendor|amount
 ```
 
 ## Interesting Code
-A piece of interesting code would be reversing the order of the transactions to display newest first:
+A piece of interesting code would be reversing the order of the ledgerEntries to display newest first:
 
 ```
 ArrayList<String> lines = new ArrayList<>();

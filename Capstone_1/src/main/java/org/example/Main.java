@@ -1,10 +1,8 @@
 package org.example;
 
-import org.example.Transaction;
 import java.io.BufferedReader;  // Read files
 import java.io.FileReader;      // Write data to a file
 import java.time.LocalDate;     // Get current date
-import java.time.LocalDateTime; // Get current date and time
 import java.util.ArrayList;     // Store list of transactions
 import java.util.Scanner;       // Read user input
 import java.io.FileWriter;      // Saving to CSV
@@ -15,8 +13,9 @@ public class Main {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        ArrayList<Transaction> transactions = new ArrayList<>();
+        ArrayList<LedgerEntry> ledgerEntries = new ArrayList<>();
         boolean running = true;     // Keeps program running the loop
+
 
         while (running) {          // Main menu loop
             System.out.println("\n~Welcome to the Ledger App~");
@@ -30,11 +29,12 @@ public class Main {
             // Capture use input:
             String choice = scanner.nextLine();
 
+
             // Process user input
             switch (choice.toUpperCase()) {
-                case "B":   // 4. Check Balance
+                case "B":   // Check Balance
                     double balance = 0.00;
-                    try (BufferedReader reader = new BufferedReader(new FileReader("ledger.csv"))) {
+                    try (BufferedReader reader = new BufferedReader(new FileReader("Transactions.csv"))) {
                         String line;
                         while ((line = reader.readLine()) != null) {
                             String[] parts = line.split("\\|");
@@ -55,10 +55,10 @@ public class Main {
                     }
                     break;
                 case "D":   // Deposit function
-                    makeDeposit(scanner, transactions);
+                    makeDeposit(scanner, ledgerEntries);
                     break;
                 case "P":   // Payment function
-                    makePayment(scanner, transactions);
+                    makePayment(scanner, ledgerEntries);
                     break;
                 case "L":   // Ledger function
                     ledgerMenu(scanner);
@@ -77,6 +77,7 @@ public class Main {
         }
     }
 
+
     // Ledger Menu
     private static void ledgerMenu(Scanner scanner) {
         boolean inLedgerMenu = true;
@@ -91,18 +92,19 @@ public class Main {
             String ledgerChoice = scanner.nextLine().toUpperCase();
 
             switch (ledgerChoice) {
-                case "A":     // View Transactions
-                    System.out.println("\nShowing all transactions:");     // CSV Entries
-                    try (BufferedReader reader = new BufferedReader(new FileReader("ledger.csv"))) {
+                case "A":     // View All Transactions
+                    System.out.println("\nShowing all transactions:");
+                    System.out.printf("%-12s %-10s %-20s %-15s $%-10s%n", "Date", "Time", "Description", "Vendor", "Amount");
+                    System.out.println("----------------------------------------------------------------");
+
+                    try (BufferedReader reader = new BufferedReader(new FileReader("Transactions.csv"))) {
                         String line;
                         ArrayList<String> lines = new ArrayList<>();
+
                         while ((line = reader.readLine()) != null) {
                             lines.add(line);
                         }
-                        Collections.reverse(lines);  // Newest transactions first
-
-                        System.out.printf("%-12s %-10s %-20s %-15s $%-10s%n", "Date", "Time", "Description", "Vendor", "Amount");
-                        System.out.println("--------------------------------------------------------------");
+                        Collections.reverse(lines);
 
                         for (String reversedLine : lines) {
                             String[] parts = reversedLine.split("\\|");
@@ -122,16 +124,25 @@ public class Main {
                     break;
                 case "D":     // View Deposits
                     System.out.println("\nShowing all deposits:");
-                    try (BufferedReader reader = new BufferedReader(new FileReader("ledger.csv"))) {
+                    System.out.printf("%-12s %-10s %-20s %-15s $%-10s%n", "Date", "Time", "Description", "Vendor", "Amount");
+                    System.out.println("----------------------------------------------------------------");
+
+                    try (BufferedReader reader = new BufferedReader(new FileReader("Transactions.csv"))) {
                         String line;
+                        ArrayList<String> lines = new ArrayList<>();
                         while ((line = reader.readLine()) != null) {
-                            String[] parts = line.split("\\|");
-                            if (parts.length == 5 && parts[2].equalsIgnoreCase("Deposit")) { // or "Payment"
-                                String amount = parts[4];
-                                String description = parts[2];
+                            lines.add(line);
+                        }
+                        Collections.reverse(lines);
+
+                        for (String reversedLine : lines) {
+                            String[] parts = reversedLine.split("\\|");
+                            if (parts.length == 5 && parts[2].equalsIgnoreCase("Deposit")) {
                                 String date = parts[0];
                                 String time = parts[1];
+                                String description = parts[2];
                                 String vendor = parts[3];
+                                String amount = parts[4];
                                 System.out.printf("%-12s %-10s %-20s %-15s $%-10s%n", date, time, description, vendor, amount);
                             }
                         }
@@ -140,17 +151,27 @@ public class Main {
                     }
                     break;
                 case "P":     // View Payments
-                    System.out.println("\nShowing only payments:");
-                    try (BufferedReader reader = new BufferedReader(new FileReader("ledger.csv"))) {
+                    System.out.println("\nShowing all payments:");
+                    System.out.printf("%-12s %-10s %-20s %-15s $%-10s%n", "Date", "Time", "Description", "Vendor", "Amount");
+                    System.out.println("----------------------------------------------------------------");
+
+                    try (BufferedReader reader = new BufferedReader(new FileReader("Transactions.csv"))) {
                         String line;
+                        ArrayList<String> lines = new ArrayList<>();
                         while ((line = reader.readLine()) != null) {
-                            String[] parts = line.split("\\|");
-                            if (parts.length == 5 && parts[2].equalsIgnoreCase("Payment")) { // or "Payment"
-                                String amount = parts[4];
-                                String description = parts[2];
+                            lines.add(line);
+                        }
+                        Collections.reverse(lines);
+
+
+                        for (String reversedLine : lines) {
+                            String[] parts = reversedLine.split("\\|");
+                            if (parts.length == 5 && parts[2].equalsIgnoreCase("Deposit")) {
                                 String date = parts[0];
                                 String time = parts[1];
+                                String description = parts[2];
                                 String vendor = parts[3];
+                                String amount = parts[4];
                                 System.out.printf("%-12s %-10s %-20s %-15s $%-10s%n", date, time, description, vendor, amount);
                             }
                         }
@@ -174,8 +195,10 @@ public class Main {
     }
 
 
+
+
     // New method: Make Deposit
-    private static void makeDeposit(Scanner scanner, ArrayList<Transaction> transactions) {
+    private static void makeDeposit(Scanner scanner, ArrayList<LedgerEntry> ledgerEntries) {
         System.out.println("Enter deposit amount: ");
         String depositAmount = scanner.nextLine();
 
@@ -185,14 +208,14 @@ public class Main {
         System.out.print("Enter deposit vendor: ");
         String vendor = scanner.nextLine();
 
-        Transaction deposit = new Transaction(depositAmount, "Deposit", description);
+        LedgerEntry deposit = new LedgerEntry(depositAmount, "Deposit", description);
 
         System.out.println("You have deposited: $" + depositAmount + " for \"" + description + "\"");
 
         // CSV Saving
-        try (FileWriter writer = new FileWriter("ledger.csv", true)) {
+        try (FileWriter writer = new FileWriter("Transactions.csv", true)) {
             String[] timestampParts = deposit.getTimestamp().toString().split("T");
-            writer.write(timestampParts[0] + "|" + timestampParts[1] + "|" + description + "|" + vendor + "|" + depositAmount + "\n");
+            writer.write(timestampParts[0] + "|" + timestampParts[1] + "|Deposit|" + vendor + "|" + depositAmount + "\n");
         } catch (IOException e) {
             System.out.println("An error occurred while saving the deposit.");
             e.printStackTrace();
@@ -200,7 +223,7 @@ public class Main {
     }
 
     // New method: Make Payment
-    private static void makePayment(Scanner scanner, ArrayList<Transaction> transactions) {
+    private static void makePayment(Scanner scanner, ArrayList<LedgerEntry> ledgerEntries) {
         System.out.println("Enter payment amount: ");
         String paymentAmount = scanner.nextLine();
 
@@ -210,13 +233,13 @@ public class Main {
         System.out.print("Enter payment vendor: ");
         String vendor = scanner.nextLine();
 
-        Transaction payment = new Transaction(paymentAmount, "Payment", description);
+        LedgerEntry payment = new LedgerEntry(paymentAmount, "Payment", description);
         System.out.println("You paid: $" + paymentAmount);
 
         // CSV Saving
-        try (FileWriter writer = new FileWriter("ledger.csv", true)) {
+        try (FileWriter writer = new FileWriter("Transactions.csv", true)) {
             String[] timestampParts = payment.getTimestamp().toString().split("T");
-            writer.write(timestampParts[0] + "|" + timestampParts[1] + "|" + description + "|" + vendor + "|" + paymentAmount + "\n");
+            writer.write(timestampParts[0] + "|" + timestampParts[1] + "|Payment|" + vendor + "|" + paymentAmount + "\n");
         } catch (IOException e) {
             System.out.println("An error occurred while saving the payment.");
             e.printStackTrace();
@@ -243,13 +266,19 @@ public class Main {
                     System.out.printf("%-12s %-10s %-20s %-15s $%-10s%n", "Date", "Time", "Description", "Vendor", "Amount");
                     System.out.println("----------------------------------------------------------------");
 
-                    try (BufferedReader reader = new BufferedReader(new FileReader("ledger.csv"))) {
+                    try (BufferedReader reader = new BufferedReader(new FileReader("Transactions.csv"))) {
                         String line;
                         LocalDate today = LocalDate.now();
                         LocalDate firstOfMonth = today.withDayOfMonth(1);
 
+                        ArrayList<String> lines = new ArrayList<>();
                         while ((line = reader.readLine()) != null) {
-                            String[] parts = line.split("\\|");
+                            lines.add(line);
+                        }
+                        Collections.reverse(lines);
+
+                        for (String reversedLine : lines) {
+                            String[] parts = reversedLine.split("\\|");
                             if (parts.length == 5) {
                                 String dateStr = parts[0];
                                 String time = parts[1];
@@ -273,15 +302,21 @@ public class Main {
                     System.out.printf("%-12s %-10s %-20s %-15s $%-10s%n", "Date", "Time", "Description", "Vendor", "Amount");
                     System.out.println("----------------------------------------------------------------");
 
-                    try (BufferedReader reader = new BufferedReader(new FileReader("ledger.csv"))) {
+                    try (BufferedReader reader = new BufferedReader(new FileReader("Transactions.csv"))) {
                         String line;
                         LocalDate today = LocalDate.now();
                         LocalDate firstOfThisMonth = today.withDayOfMonth(1);
                         LocalDate firstOfLastMonth = firstOfThisMonth.minusMonths(1);
                         LocalDate lastOfLastMonth = firstOfThisMonth.minusDays(1);
 
+                        ArrayList<String> lines = new ArrayList<>();
                         while ((line = reader.readLine()) != null) {
-                            String[] parts = line.split("\\|");
+                            lines.add(line);
+                        }
+                        Collections.reverse(lines);
+
+                        for (String reversedLine : lines) {
+                            String[] parts = reversedLine.split("\\|");
                             if (parts.length == 5) {
                                 String dateStr = parts[0];
                                 String time = parts[1];
@@ -305,13 +340,19 @@ public class Main {
                     System.out.printf("%-12s %-10s %-20s %-15s $%-10s%n", "Date", "Time", "Description", "Vendor", "Amount");
                     System.out.println("----------------------------------------------------------------");
 
-                    try (BufferedReader reader = new BufferedReader(new FileReader("ledger.csv"))) {
+                    try (BufferedReader reader = new BufferedReader(new FileReader("Transactions.csv"))) {
                         String line;
                         LocalDate today = LocalDate.now();
                         LocalDate firstOfYear = today.withDayOfYear(1);
 
+                        ArrayList<String> lines = new ArrayList<>();
                         while ((line = reader.readLine()) != null) {
-                            String[] parts = line.split("\\|");
+                            lines.add(line);
+                        }
+                        Collections.reverse(lines);
+
+                        for (String reversedLine : lines) {
+                            String[] parts = reversedLine.split("\\|");
                             if (parts.length == 5) {
                                 String dateStr = parts[0];
                                 String time = parts[1];
@@ -325,6 +366,8 @@ public class Main {
                                 }
                             }
                         }
+
+
                     } catch (IOException e) {
                         System.out.println("Unable to read ledger file.");
                         e.printStackTrace();
@@ -335,15 +378,21 @@ public class Main {
                     System.out.printf("%-12s %-10s %-20s %-15s $%-10s%n", "Date", "Time", "Description", "Vendor", "Amount");
                     System.out.println("----------------------------------------------------------------");
 
-                    try (BufferedReader reader = new BufferedReader(new FileReader("ledger.csv"))) {
+                    try (BufferedReader reader = new BufferedReader(new FileReader("Transactions.csv"))) {
                         String line;
                         LocalDate today = LocalDate.now();
                         int lastYear = today.getYear() - 1;
                         LocalDate start = LocalDate.of(lastYear, 1, 1);
                         LocalDate end = LocalDate.of(lastYear, 12, 31);
 
+                        ArrayList<String> lines = new ArrayList<>();
                         while ((line = reader.readLine()) != null) {
-                            String[] parts = line.split("\\|");
+                            lines.add(line);
+                        }
+                        Collections.reverse(lines);
+
+                        for (String reversedLine : lines) {
+                            String[] parts = reversedLine.split("\\|");
                             if (parts.length == 5) {
                                 String dateStr = parts[0];
                                 String time = parts[1];
@@ -370,10 +419,17 @@ public class Main {
                     System.out.printf("%-12s %-10s %-20s %-15s $%-10s%n", "Date", "Time", "Description", "Vendor", "Amount");
                     System.out.println("----------------------------------------------------------------");
 
-                    try (BufferedReader reader = new BufferedReader(new FileReader("ledger.csv"))) {
+                    try (BufferedReader reader = new BufferedReader(new FileReader("Transactions.csv"))) {
                         String line;
+                        ArrayList<String> lines = new ArrayList<>();
+
                         while ((line = reader.readLine()) != null) {
-                            String[] parts = line.split("\\|");
+                            lines.add(line);
+                        }
+                        Collections.reverse(lines);
+
+                        for (String reversedLine : lines) {
+                            String[] parts = reversedLine.split("\\|");
                             if (parts.length == 5) {
                                 String dateStr = parts[0];
                                 String time = parts[1];

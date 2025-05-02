@@ -2,7 +2,7 @@ package org.example;
 
 import java.time.LocalDateTime;
 
-public class Transaction {
+public class LedgerEntry {
     // 1. Variables
     private final String amount;
     private final String type;
@@ -10,7 +10,7 @@ public class Transaction {
     private final String description;
 
     // 2. Constructor
-    public Transaction(String amount, String type, String description) {
+    public LedgerEntry(String amount, String type, String description) {
         this.amount = amount;
         this.type = type;
         this.description = description;
