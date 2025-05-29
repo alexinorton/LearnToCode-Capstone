@@ -1,0 +1,9 @@
+===== DELI-cious Receipt =====
+Time: 2025-05-29 12:46:58
+
+12" Sandwich: Ham, American, Toppings: [lettuce tomato] + extra meat - $10.50
+Drink: Coffee - $1.50
+Chips: Doritos - $1.00
+Subtotal: $13.00
+Tax: $1.30
+Total: $14.30

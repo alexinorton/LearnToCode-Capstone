@@ -1,0 +1,7 @@
+===== DELI-cious Receipt =====
+Time: 2025-05-29 12:30:44
+
+12" Sandwich: Bacon, American, Toppings: [lettuce tomato], Extra Toppings: [tomato] - $9.00
+Subtotal: $9.00
+Tax: $0.90
+Total: $9.90

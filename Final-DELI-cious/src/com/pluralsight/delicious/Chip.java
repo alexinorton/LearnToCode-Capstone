@@ -1,19 +1,29 @@
 package com.pluralsight.delicious;
 
 public class Chip implements Item {
-    private String type;
+    private String name;
+    private double price;
 
-    public Chip(String type) {
-        this.type = type;
+    public Chip(String name, double price) {
+        this.name = name;
+        this.price = price;
     }
 
-    @Override
+    public String getName() {
+        return name;
+    }
+
     public double getPrice() {
-        return 1.25;
+        return price;
     }
 
     @Override
     public String getReceiptText() {
-        return type + " Chips - $" + String.format("%.2f", getPrice()) + "\n";
+        return "Chips: " + name + " - $" + String.format("%.2f", price);
+    }
+
+    @Override
+    public String toString() {
+        return name + " ($" + String.format("%.2f", price) + ")";
     }
 }

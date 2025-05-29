@@ -1,0 +1,9 @@
+===== DELI-cious Receipt =====
+Time: 2025-05-29 13:20:19
+
+12" Sandwich: Pastrami, Pepper Jack, Toppings: [lettuce tomato], toasted - $9.00
+Drink: Apple Juice - $3.00
+Chips: Doritos - $1.50
+Subtotal: $13.50
+Tax: $1.35
+Total: $14.85

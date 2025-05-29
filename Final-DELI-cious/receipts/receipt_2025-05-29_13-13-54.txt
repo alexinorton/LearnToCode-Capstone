@@ -1,0 +1,7 @@
+===== DELI-cious Receipt =====
+Time: 2025-05-29 13:13:54
+
+Drink: Apple Juice - $3.00
+Subtotal: $3.00
+Tax: $0.30
+Total: $3.30
