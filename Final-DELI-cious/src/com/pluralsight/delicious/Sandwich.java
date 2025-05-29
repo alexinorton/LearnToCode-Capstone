@@ -69,6 +69,13 @@ public class Sandwich implements Item {
             }
         }
 
+        // Add $0.50 for each premium topping
+        for (String topping : toppings) {
+            if (topping.endsWith("(premium)")) {
+                basePrice += 0.50;
+            }
+        }
+
         return basePrice;
     }
 

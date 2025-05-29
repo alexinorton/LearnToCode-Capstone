@@ -55,11 +55,22 @@ public class OrderManager {
         boolean extraCheese = yesNo("Extra cheese? (yes/no): ");
 
         ArrayList<String> toppings = new ArrayList<>();
-        System.out.println("Add toppings (Lettuce, Tomato, Onion, Pickles, Peppers, Cucumbers, Olives, Spinach). Type 'done' to finish:");
+        System.out.println("Add regular toppings (Lettuce, Tomato, Onion, Pickles, Peppers, Cucumbers, Olives, Spinach). Type 'done' to finish:");
         while (true) {
             String topping = scanner.nextLine();
             if (topping.equalsIgnoreCase("done")) break;
             toppings.add(topping);
+        }
+
+        boolean wantsExtraToppings = yesNo("Do you want premium toppings? (yes/no): ");
+        if (wantsExtraToppings) {
+            System.out.println("Available premium toppings: Bacon, Avocado, Jalapenos, Mushrooms");
+            System.out.println("Type each topping and press Enter. Type 'done' to finish:");
+            while (true) {
+                String extraTopping = scanner.nextLine();
+                if (extraTopping.equalsIgnoreCase("done")) break;
+                toppings.add(extraTopping + " (premium)");
+            }
         }
 
         ArrayList<String> sauces = new ArrayList<>();
