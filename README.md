@@ -44,4 +44,17 @@ Example Receipt
 ---
 
 💻 Interesting Code Snippet
-I personally found the OVERRIDE function is very
+Unit testing is a useful way to prove that your code works the way it’s supposed to. In this project I used a unit test to automatically check if parts of my program are doing their job correctly. This is a very powerful tool that can save alot of time fixing code that could've been handled with a unit test.
+
+@Test
+    public void testGetTotalPrice_withExtras() {
+        Sandwich sandwich = new Sandwich("Wheat", 8, "Turkey", "Swiss");
+        sandwich.setExtraMeat(true);
+        sandwich.setExtraCheese(true);
+
+        double expected = sandwich.calculateBasePrice() + sandwich.getExtraMeatPrice() + sandwich.getExtraCheesePrice();
+        double actual = sandwich.getTotalPrice();
+
+        assertEquals(expected, actual, 0.01);
+    }
+}
