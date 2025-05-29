@@ -19,15 +19,18 @@ public class ReceiptManager {
             for (Item item : items) {
                 writer.write("- " + item.getReceiptText() + "\n");
             }
+
             writer.write("---------------------------------------------\n");
             writer.write(String.format("%-35s $%6.2f%n", "Subtotal:", subtotal));
             writer.write(String.format("%-35s $%6.2f%n", "Tax (10%):", tax));
             writer.write(String.format("%-35s $%6.2f%n", "Total:", total));
             writer.write("=============================================\n");
 
+
             writer.close();
         } catch (IOException e) {
             System.out.println("Error saving receipt: " + e.getMessage());
+
         }
     }
 }

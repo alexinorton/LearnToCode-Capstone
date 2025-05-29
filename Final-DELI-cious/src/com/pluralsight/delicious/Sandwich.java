@@ -85,7 +85,7 @@ public class Sandwich implements Item {
         text.append(size).append("\" Sandwich: ").append(meat).append(", ").append(cheese);
         text.append(", Toppings: ").append(toppings);
 
-        if (!extraToppings.isEmpty()) {
+        if (extraToppings.size() > 0) {
             text.append(", Extra Toppings: ").append(extraToppings);
         }
         if (extraMeat) {
