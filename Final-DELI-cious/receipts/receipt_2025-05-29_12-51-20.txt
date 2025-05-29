@@ -1,0 +1,9 @@
+===== DELI-cious Receipt =====
+Time: 2025-05-29 12:51:20
+
+12" Sandwich: Roast Beef, American, Toppings: [lettuce tomato], Extra Toppings: [pickles] + extra meat + extra cheese - $11.40
+Drink: Coffee - $2.00
+Chips: Doritos - $1.50
+Subtotal: $14.90
+Tax: $1.49
+Total: $16.39

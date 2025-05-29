@@ -1,0 +1,8 @@
+===== DELI-cious Receipt =====
+Time: 2025-05-29 12:33:29
+
+12" Sandwich: Roast Beef, Provolone, Toppings: [lettuce] + extra meat - $10.50
+4" Sandwich: Turkey, American, Toppings: [] - $5.00
+Subtotal: $15.50
+Tax: $1.55
+Total: $17.05

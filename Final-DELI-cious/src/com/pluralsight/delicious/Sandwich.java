@@ -1,99 +1,100 @@
 package com.pluralsight.delicious;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class Sandwich implements Item {
-    private String size;
-    private String bread;
+    private int size;
     private String meat;
-    private boolean extraMeat;
     private String cheese;
+    private List<String> toppings;
+    private List<String> extraToppings;
+    private double price;
+    private boolean extraMeat;
     private boolean extraCheese;
-    private ArrayList<String> toppings;
-    private ArrayList<String> sauces;
+    private boolean toasted;
 
-    public Sandwich(String size, String bread, String meat, boolean extraMeat, String cheese,
-                    boolean extraCheese, ArrayList<String> toppings, ArrayList<String> sauces) {
+    public Sandwich(int size, String meat, String cheese, List<String> toppings, double price) {
         this.size = size;
-        this.bread = bread;
         this.meat = meat;
-        this.extraMeat = extraMeat;
         this.cheese = cheese;
-        this.extraCheese = extraCheese;
         this.toppings = toppings;
-        this.sauces = sauces;
+        this.price = price;
+        this.extraToppings = new java.util.ArrayList<>();
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public String getMeat() {
+        return meat;
+    }
+
+    public String getCheese() {
+        return cheese;
+    }
+
+    public List<String> getToppings() {
+        return toppings;
+    }
+
+    public List<String> getExtraToppings() {
+        return extraToppings;
+    }
+
+    public void setExtraToppings(List<String> extraToppings) {
+        this.extraToppings = extraToppings;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public boolean hasExtraMeat() {
+        return extraMeat;
+    }
+
+    public boolean hasExtraCheese() {
+        return extraCheese;
+    }
+
+    public void setExtraMeat(boolean extraMeat) {
+        this.extraMeat = extraMeat;
+    }
+
+    public void setExtraCheese(boolean extraCheese) {
+        this.extraCheese = extraCheese;
+    }
+
+    public boolean isToasted() {
+        return toasted;
+    }
+
+    public void setToasted(boolean toasted) {
+        this.toasted = toasted;
     }
 
     @Override
-    public double getPrice() {
-        double basePrice;
-        switch (size) {
-            case "4":
-                basePrice = 5.50;
-                break;
-            case "8":
-                basePrice = 7.00;
-                break;
-            case "12":
-                basePrice = 8.50;
-                break;
-            default:
-                basePrice = 0;
-        }
-
-        if (extraMeat) {
-            switch (size) {
-                case "4":
-                    basePrice += 1.00;
-                    break;
-                case "8":
-                    basePrice += 2.00;
-                    break;
-                case "12":
-                    basePrice += 3.00;
-                    break;
-            }
-        }
-
-        if (extraCheese) {
-            switch (size) {
-                case "4":
-                    basePrice += 0.75;
-                    break;
-                case "8":
-                    basePrice += 1.50;
-                    break;
-                case "12":
-                    basePrice += 2.25;
-                    break;
-            }
-        }
-
-        // Add $0.50 for each premium topping
-        for (String topping : toppings) {
-            if (topping.endsWith("(premium)")) {
-                basePrice += 0.50;
-            }
-        }
-
-        return basePrice;
+    public String toString() {
+        return size + "\" sandwich with " + meat + ", " + cheese + ", toppings: " + toppings +
+                (extraToppings.isEmpty() ? "" : ", Extra Toppings: " + extraToppings) +
+                (extraMeat ? " + extra meat" : "") +
+                (extraCheese ? " + extra cheese" : "") +
+                (toasted ? ", toasted" : "") +
+                " ($" + String.format("%.2f", price) + ")";
     }
 
     @Override
     public String getReceiptText() {
-        StringBuilder receipt = new StringBuilder();
-        receipt.append(size).append("\" ").append(meat).append(" Sandwich on ").append(bread).append("\n");
-        receipt.append("Cheese: ").append(cheese).append(extraCheese ? " (extra)" : "").append("\n");
-        if (extraMeat) {
-            receipt.append("Extra meat added\n");
-        }
-        if (!toppings.isEmpty()) {
-            receipt.append("Toppings: ").append(String.join(", ", toppings)).append("\n");
-        }
-        if (!sauces.isEmpty()) {
-            receipt.append("Sauces: ").append(String.join(", ", sauces)).append("\n");
-        }
-        receipt.append(String.format("Price: $%.2f\n", getPrice()));
-        return receipt.toString();
+        return String.format("%d\" Sandwich: %s, %s, Toppings: %s%s%s%s%s - $%.2f",
+                size,
+                meat,
+                cheese,
+                toppings,
+                extraToppings.isEmpty() ? "" : ", Extra Toppings: " + extraToppings,
+                extraMeat ? " + extra meat" : "",
+                extraCheese ? " + extra cheese" : "",
+                toasted ? ", toasted" : "",
+                price);
     }
 }

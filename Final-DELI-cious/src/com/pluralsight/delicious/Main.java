@@ -1,47 +1,30 @@
 package com.pluralsight.delicious;
 
-import java.util.Scanner;
-
 public class Main {
+    private static final double TAX_RATE = 0.10;
+
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
         OrderManager orderManager = new OrderManager();
-        ReceiptManager receiptManager = new ReceiptManager();      // Git test
+        Order order = orderManager.createOrder();
 
-        boolean running = true;
+        double subtotal = order.calculateSubtotal();
+        double taxAmount = subtotal * TAX_RATE;
+        double total = subtotal + taxAmount;
 
-        while (running) {
-            System.out.println("===================================");
-            System.out.println("   WELCOME TO DELI-cious");
-            System.out.println("===================================");
-            System.out.println("1. Start New Order");
-            System.out.println("2. Exit");
-            System.out.print("Choose an option: ");
-            String choice = scanner.nextLine();
-
-            switch (choice) {
-                case "1":
-                    Order order = orderManager.startOrder();
-                    double subtotal = order.calculateSubtotal();
-                    double taxAmount = subtotal * OrderManager.TAX_RATE;
-                    double total = subtotal + taxAmount;
-
-                    receiptManager.saveReceipts(order.getItems(), subtotal, taxAmount, total);
-
-                    System.out.printf("Subtotal: $%.2f\n", subtotal);
-                    System.out.printf("Tax (%.1f%%): $%.2f\n", OrderManager.TAX_RATE * 100, taxAmount);
-                    System.out.printf("Total: $%.2f\n", total);
-                    System.out.println("Thank you for your order!\n");
-                    break;
-                case "2":
-                    System.out.println("Exiting... Goodbye!");
-                    running = false;
-                    break;
-                default:
-                    System.out.println("Invalid choice. Try again.");
-            }
+        System.out.println("\n================== RECEIPT ==================");
+        for (Item item : order.getItems()) {
+            System.out.println("- " + item.getReceiptText());
         }
 
-        scanner.close();
+        System.out.println("---------------------------------------------");
+        System.out.printf("%-35s $%6.2f%n", "Subtotal:", subtotal);
+        System.out.printf("%-35s $%6.2f%n", "Tax (10%):", taxAmount);
+        System.out.printf("%-35s $%6.2f%n", "Total:", total);
+
+        System.out.println("\nThank you for choosing DELI-cious Sandwiches!");
+        System.out.println("=============================================");
+
+        ReceiptManager receiptManager = new ReceiptManager();
+        receiptManager.saveReceipts(order.getItems(), subtotal, taxAmount, total);
     }
 }

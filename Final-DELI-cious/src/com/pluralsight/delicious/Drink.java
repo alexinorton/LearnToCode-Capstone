@@ -1,30 +1,29 @@
 package com.pluralsight.delicious;
 
 public class Drink implements Item {
-    private String type;
-    private String size;
+    private String name;
+    private double price;
 
-    public Drink(String type, String size) {
-        this.type = type;
-        this.size = size;
+    public Drink(String name, double price) {
+        this.name = name;
+        this.price = price;
     }
 
-    @Override
+    public String getName() {
+        return name;
+    }
+
     public double getPrice() {
-        switch (size.toLowerCase()) {
-            case "small":
-                return 1.50;
-            case "medium":
-                return 2.00;
-            case "large":
-                return 2.50;
-            default:
-                return 0.00;
-        }
+        return price;
     }
 
     @Override
     public String getReceiptText() {
-        return size + " " + type + " - $" + String.format("%.2f", getPrice()) + "\n";
+        return "Drink: " + name + " - $" + String.format("%.2f", price);
+    }
+
+    @Override
+    public String toString() {
+        return name + " ($" + String.format("%.2f", price) + ")";
     }
 }
