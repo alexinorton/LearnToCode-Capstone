@@ -75,26 +75,35 @@ public class Sandwich implements Item {
     }
 
     @Override
-    public String toString() {
-        return size + "\" sandwich with " + meat + ", " + cheese + ", toppings: " + toppings +
-                (extraToppings.isEmpty() ? "" : ", Extra Toppings: " + extraToppings) +
-                (extraMeat ? " + extra meat" : "") +
-                (extraCheese ? " + extra cheese" : "") +
-                (toasted ? ", toasted" : "") +
-                " ($" + String.format("%.2f", price) + ")";
+    public String getName() {
+        return size + "\" " + meat + " Sandwich";
     }
 
     @Override
     public String getReceiptText() {
-        return String.format("%d\" Sandwich: %s, %s, Toppings: %s%s%s%s%s - $%.2f",
-                size,
-                meat,
-                cheese,
-                toppings,
-                extraToppings.isEmpty() ? "" : ", Extra Toppings: " + extraToppings,
-                extraMeat ? " + extra meat" : "",
-                extraCheese ? " + extra cheese" : "",
-                toasted ? ", toasted" : "",
-                price);
+        StringBuilder text = new StringBuilder();
+        text.append(size).append("\" Sandwich: ").append(meat).append(", ").append(cheese);
+        text.append(", Toppings: ").append(toppings);
+
+        if (!extraToppings.isEmpty()) {
+            text.append(", Extra Toppings: ").append(extraToppings);
+        }
+        if (extraMeat) {
+            text.append(" + extra meat");
+        }
+        if (extraCheese) {
+            text.append(" + extra cheese");
+        }
+        if (toasted) {
+            text.append(", toasted");
+        }
+
+        text.append(String.format(" - $%.2f", price));
+        return text.toString();
+    }
+
+    @Override
+    public String toString() {
+        return getReceiptText();
     }
 }
