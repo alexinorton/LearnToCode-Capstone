@@ -1,0 +1,24 @@
+===== DELI-cious Receipt =====
+Time: 2025-05-28 17:56:01
+
+12" steak Sandwich on white
+Cheese: american (extra)
+Extra meat added
+Toppings: Lettuce
+Sauces: Ketchup, Oil
+Price: $13.75
+
+4" turkey Sandwich on white
+Cheese: swiss (extra)
+Extra meat added
+Toppings: Lettuce tomato
+Sauces: ketchup
+Price: $7.25
+
+Small water - $1.50
+
+doritos Chips - $1.25
+
+Subtotal: $23.75
+Tax: $2.38
+Total: $26.13

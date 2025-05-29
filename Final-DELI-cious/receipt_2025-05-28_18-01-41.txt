@@ -1,0 +1,17 @@
+===== DELI-cious Receipt =====
+Time: 2025-05-28 18:01:41
+
+12" steak Sandwich on white
+Cheese: swiss (extra)
+Extra meat added
+Toppings: Lettuce tomato onion
+Sauces: ketchup vinegar done, don e
+Price: $13.75
+
+large apple juice - $2.50
+
+lays Chips - $1.25
+
+Subtotal: $17.50
+Tax: $1.75
+Total: $19.25
