@@ -1,0 +1,9 @@
+================== RECEIPT ==================
+- 12" Sandwich: Pastrami, Swiss, Toppings: [lettuce pickle] - $9.00
+- Drink: Apple Juice (Large) - $2.50
+- Chips: Sun Chips - $1.50
+---------------------------------------------
+Subtotal:                           $ 13.00
+Tax (10%):                          $  1.30
+Total:                              $ 14.30
+=============================================

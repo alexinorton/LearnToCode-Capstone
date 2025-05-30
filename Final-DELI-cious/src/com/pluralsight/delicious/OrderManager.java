@@ -46,11 +46,11 @@ public class OrderManager {
         return order;
     }
 
-
     private Sandwich buildSandwich() {
         int size = 8;
+        boolean validSize = false;
 
-        while (true) {
+        while (!validSize) {
             System.out.println("\nChoose your sandwich size:");
             System.out.println("1) 4 inch");
             System.out.println("2) 8 inch");
@@ -60,13 +60,13 @@ public class OrderManager {
 
             if (sizeChoice.equals("1")) {
                 size = 4;
-                break;
+                validSize = true;
             } else if (sizeChoice.equals("2")) {
                 size = 8;
-                break;
+                validSize = true;
             } else if (sizeChoice.equals("3")) {
                 size = 12;
-                break;
+                validSize = true;
             } else {
                 System.out.println("Invalid input. Please enter 1, 2, or 3.");
             }
@@ -79,9 +79,9 @@ public class OrderManager {
             default -> 7.00;
         };
 
-
         String meat = "";
-        while (true) {
+        boolean validMeat = false;
+        while (!validMeat) {
             System.out.println("\nChoose your meat:");
             System.out.println("1) Ham");
             System.out.println("2) Turkey");
@@ -92,26 +92,32 @@ public class OrderManager {
             System.out.print("Enter your choice: ");
             String meatChoice = scanner.nextLine();
 
-            if (meatChoice.equals("1")) {
-                meat = "Ham";
-                break;
-            } else if (meatChoice.equals("2")) {
-                meat = "Turkey";
-                break;
-            } else if (meatChoice.equals("3")) {
-                meat = "Roast Beef";
-                break;
-            } else if (meatChoice.equals("4")) {
-                meat = "Bacon";
-                break;
-            } else if (meatChoice.equals("5")) {
-                meat = "Chicken";
-                break;
-            } else if (meatChoice.equals("6")) {
-                meat = "Pastrami";
-                break;
-            } else {
-                System.out.println("Invalid choice. Please enter 1–6.");
+            switch (meatChoice) {
+                case "1" -> {
+                    meat = "Ham";
+                    validMeat = true;
+                }
+                case "2" -> {
+                    meat = "Turkey";
+                    validMeat = true;
+                }
+                case "3" -> {
+                    meat = "Roast Beef";
+                    validMeat = true;
+                }
+                case "4" -> {
+                    meat = "Bacon";
+                    validMeat = true;
+                }
+                case "5" -> {
+                    meat = "Chicken";
+                    validMeat = true;
+                }
+                case "6" -> {
+                    meat = "Pastrami";
+                    validMeat = true;
+                }
+                default -> System.out.println("Invalid choice. Please enter 1–6.");
             }
         }
 
@@ -129,7 +135,8 @@ public class OrderManager {
         }
 
         String cheese = "";
-        while (true) {
+        boolean validCheese = false;
+        while (!validCheese) {
             System.out.println("\nChoose your cheese:");
             System.out.println("1) American");
             System.out.println("2) Provolone");
@@ -139,23 +146,28 @@ public class OrderManager {
             System.out.print("Enter your choice: ");
             String cheeseChoice = scanner.nextLine();
 
-            if (cheeseChoice.equals("1")) {
-                cheese = "American";
-                break;
-            } else if (cheeseChoice.equals("2")) {
-                cheese = "Provolone";
-                break;
-            } else if (cheeseChoice.equals("3")) {
-                cheese = "Cheddar";
-                break;
-            } else if (cheeseChoice.equals("4")) {
-                cheese = "Swiss";
-                break;
-            } else if (cheeseChoice.equals("5")) {
-                cheese = "Pepper Jack";
-                break;
-            } else {
-                System.out.println("Invalid choice. Please enter 1–5.");
+            switch (cheeseChoice) {
+                case "1" -> {
+                    cheese = "American";
+                    validCheese = true;
+                }
+                case "2" -> {
+                    cheese = "Provolone";
+                    validCheese = true;
+                }
+                case "3" -> {
+                    cheese = "Cheddar";
+                    validCheese = true;
+                }
+                case "4" -> {
+                    cheese = "Swiss";
+                    validCheese = true;
+                }
+                case "5" -> {
+                    cheese = "Pepper Jack";
+                    validCheese = true;
+                }
+                default -> System.out.println("Invalid choice. Please enter 1–5.");
             }
         }
 
@@ -173,7 +185,7 @@ public class OrderManager {
         }
 
         ArrayList<String> toppings = new ArrayList<>();
-        System.out.println("\nAdd your regular toppings (lettuce, tomato, pickles, etc.):");
+        System.out.println("\nAdd your regular toppings (lettuce, spinach, tomato, pickles, onion, peppers, jalapenos):");
         System.out.println("Type 'done' when finished:");
         while (true) {
             String topping = scanner.nextLine();
@@ -194,12 +206,56 @@ public class OrderManager {
             }
         }
 
+        // Sauce selection
+        String sauce = "";
+        boolean validSauce = false;
+        while (!validSauce) {
+            System.out.println("\nChoose your sauce:");
+            System.out.println("1) Mayo");
+            System.out.println("2) Mustard");
+            System.out.println("3) Ketchup");
+            System.out.println("4) Ranch");
+            System.out.println("5) Thousand Islands");
+            System.out.println("6) Vinaigrette");
+            System.out.print("Enter your choice: ");
+            String sauceChoice = scanner.nextLine();
+
+            switch (sauceChoice) {
+                case "1" -> {
+                    sauce = "Mayo";
+                    validSauce = true;
+                }
+                case "2" -> {
+                    sauce = "Mustard";
+                    validSauce = true;
+                }
+                case "3" -> {
+                    sauce = "Ketchup";
+                    validSauce = true;
+                }
+                case "4" -> {
+                    sauce = "Ranch";
+                    validSauce = true;
+                }
+                case "5" -> {
+                    sauce = "Thousand Islands";
+                    validSauce = true;
+                }
+                case "6" -> {
+                    sauce = "Vinaigrette";
+                    validSauce = true;
+                }
+                default -> System.out.println("Invalid choice. Please enter 1–6.");
+            }
+        }
+
         double totalPrice = basePrice + extraMeatCost + extraCheeseCost;
 
         Sandwich sandwich = new Sandwich(size, meat, cheese, toppings, totalPrice);
         sandwich.setExtraMeat(extraMeat);
         sandwich.setExtraCheese(extraCheese);
         sandwich.setExtraToppings(extraToppings);
+        sandwich.setSauce(sauce);
 
         System.out.print("Would you like your sandwich toasted? (yes/no): ");
         String toastInput = scanner.nextLine();
@@ -209,11 +265,10 @@ public class OrderManager {
         return sandwich;
     }
 
-
-
     private Drink buildDrink() {
         String name = "";
-        while (true) {
+        boolean validDrink = false;
+        while (!validDrink) {
             System.out.println("\nChoose a drink:");
             System.out.println("1) Coffee");
             System.out.println("2) Apple Juice");
@@ -222,54 +277,61 @@ public class OrderManager {
             System.out.print("Enter your drink choice: ");
             String drinkType = scanner.nextLine();
 
-            if (drinkType.equals("1")) {
-                name = "Coffee";
-                break;
-            } else if (drinkType.equals("2")) {
-                name = "Apple Juice";
-                break;
-            } else if (drinkType.equals("3")) {
-                name = "Water";
-                break;
-            } else if (drinkType.equals("4")) {
-                name = "Soda";
-                break;
-            } else {
-                System.out.println("Invalid input. Please enter 1–4.");
+            switch (drinkType) {
+                case "1" -> {
+                    name = "Coffee";
+                    validDrink = true;
+                }
+                case "2" -> {
+                    name = "Apple Juice";
+                    validDrink = true;
+                }
+                case "3" -> {
+                    name = "Water";
+                    validDrink = true;
+                }
+                case "4" -> {
+                    name = "Soda";
+                    validDrink = true;
+                }
+                default -> System.out.println("Invalid choice. Please enter 1–4.");
             }
         }
 
         String size = "";
-        while (true) {
+        boolean validSize = false;
+        while (!validSize) {
             System.out.println("Choose a size:");
-            System.out.println("1) Small - $2.00");
-            System.out.println("2) Medium - $2.50");
-            System.out.println("3) Large - $3.00");
+            System.out.println("1) Small - $1.50");
+            System.out.println("2) Medium - $2.00");
+            System.out.println("3) Large - $2.50");
             System.out.print("Enter your size choice: ");
             String sizeChoice = scanner.nextLine();
 
-            if (sizeChoice.equals("1")) {
-                size = "Small";
-                break;
-            } else if (sizeChoice.equals("2")) {
-                size = "Medium";
-                break;
-            } else if (sizeChoice.equals("3")) {
-                size = "Large";
-                break;
-            } else {
-                System.out.println("Invalid size. Please enter 1–3.");
+            switch (sizeChoice) {
+                case "1" -> {
+                    size = "Small";
+                    validSize = true;
+                }
+                case "2" -> {
+                    size = "Medium";
+                    validSize = true;
+                }
+                case "3" -> {
+                    size = "Large";
+                    validSize = true;
+                }
+                default -> System.out.println("Invalid size. Please enter 1–3.");
             }
         }
 
         return new Drink(name, size);
     }
 
-
-
     private Chip buildChips() {
         String chipType = "";
-        while (true) {
+        boolean validChip = false;
+        while (!validChip) {
             System.out.println("\nChoose a chip:");
             System.out.println("1) Doritos");
             System.out.println("2) Lays");
@@ -277,17 +339,20 @@ public class OrderManager {
             System.out.print("Enter your choice: ");
             String choice = scanner.nextLine();
 
-            if (choice.equals("1")) {
-                chipType = "Doritos";
-                break;
-            } else if (choice.equals("2")) {
-                chipType = "Lays";
-                break;
-            } else if (choice.equals("3")) {
-                chipType = "Sun Chips";
-                break;
-            } else {
-                System.out.println("Invalid choice. Please enter 1–3.");
+            switch (choice) {
+                case "1" -> {
+                    chipType = "Doritos";
+                    validChip = true;
+                }
+                case "2" -> {
+                    chipType = "Lays";
+                    validChip = true;
+                }
+                case "3" -> {
+                    chipType = "Sun Chips";
+                    validChip = true;
+                }
+                default -> System.out.println("Invalid choice. Please enter 1–3.");
             }
         }
 
