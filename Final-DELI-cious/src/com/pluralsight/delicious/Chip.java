@@ -1,5 +1,4 @@
 package com.pluralsight.delicious;
-
 public class Chip implements Item {
     private String name;
     private double price;
@@ -9,6 +8,12 @@ public class Chip implements Item {
         this.price = price;
     }
 
+
+
+
+
+
+    
     @Override
     public String getName() {
         return name;

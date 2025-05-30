@@ -1,0 +1,12 @@
+============== RECEIPT ==============
+- 4" Sandwich: Ham, American
+  Toppings: []
+  Sauce: Vinaigrette
+  Total: $5.00
+-------------------------------------
+Subtotal:                              $5.00
+Tax (10%):                             $0.50
+Total:                                 $5.50
+
+Thank you for choosing DELI-cious Sandwiches!
+============================================

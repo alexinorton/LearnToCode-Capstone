@@ -1,0 +1,25 @@
+================== RECEIPT ==================
+- 4" Sandwich: Pastrami, Swiss
+  Toppings: [lettuce spinach]
+  Extra Toppings: [pickles]
+  Sauce: Vinaigrette
+  + Extra Meat ($0.50)
+  + Extra Cheese ($0.30)
+  + Toasted
+  Total: $5.80
+- 12" Sandwich: Ham, Provolone
+  Toppings: [tomato pickle]
+  Sauce: Ranch
+  + Extra Meat ($1.50)
+  + Extra Cheese ($0.90)
+  + Toasted
+  Total: $11.40
+- Drink: Apple Juice (Large) - $2.50
+- Drink: Apple Juice (Large) - $2.50
+- Chips: Sun Chips - $1.50
+- Chips: Sun Chips - $1.50
+---------------------------------------------
+Subtotal:                           $ 25.20
+Tax (10%):                          $  2.52
+Total:                              $ 27.72
+=============================================

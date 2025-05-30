@@ -1,7 +1,6 @@
 package com.pluralsight.delicious;
 
 import java.util.List;
-
 public class Sandwich implements Item {
     private int size;
     private String meat;

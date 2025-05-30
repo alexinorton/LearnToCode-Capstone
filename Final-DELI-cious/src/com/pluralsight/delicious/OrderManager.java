@@ -1,9 +1,7 @@
 package com.pluralsight.delicious;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-
 public class OrderManager {
     private Scanner scanner = new Scanner(System.in);
 
@@ -17,7 +15,6 @@ public class OrderManager {
         System.out.println("=====================================");
 
         boolean ordering = true;
-
         while (ordering) {
             System.out.println("\nWhat would you like to add?");
             System.out.println("1) Sandwich");
@@ -26,7 +23,6 @@ public class OrderManager {
             System.out.println("4) Finish Order");
             System.out.print("Enter your choice: ");
             String choice = scanner.nextLine();
-
             switch (choice) {
                 case "1":
                     order.addItem(buildSandwich());
@@ -54,7 +50,6 @@ public class OrderManager {
         int size = 8;
         String sizeChoice;
         boolean validSize = false;
-
         do {
             System.out.println("\nChoose your sandwich size:");
             System.out.println("1) 4 inch");
@@ -62,7 +57,6 @@ public class OrderManager {
             System.out.println("3) 12 inch");
             System.out.print("Enter your choice: ");
             sizeChoice = scanner.nextLine();
-
             if (sizeChoice.equals("1")) {
                 size = 4;
                 validSize = true;
@@ -76,14 +70,12 @@ public class OrderManager {
                 System.out.println("Invalid input. Please enter 1, 2, or 3.");
             }
         } while (!validSize);
-
         double basePrice = switch (size) {
             case 4 -> 5.00;
             case 8 -> 7.00;
             case 12 -> 9.00;
             default -> 7.00;
         };
-
         String meat = "";
         boolean validMeat = false;
         String meatChoice;
@@ -124,7 +116,6 @@ public class OrderManager {
         System.out.print("Would you like extra meat? (yes/no): ");
         String extraMeatInput = scanner.nextLine();
         boolean extraMeat = extraMeatInput.equalsIgnoreCase("yes");
-
         double extraMeatCost = 0.0;
         if (extraMeat) {
             switch (size) {
@@ -170,7 +161,6 @@ public class OrderManager {
         System.out.print("Would you like extra cheese? (yes/no): ");
         String extraCheeseInput = scanner.nextLine();
         boolean extraCheese = extraCheeseInput.equalsIgnoreCase("yes");
-
         double extraCheeseCost = 0.0;
         if (extraCheese) {
             switch (size) {
@@ -194,7 +184,6 @@ public class OrderManager {
         List<String> extraToppings = new ArrayList<>();
         System.out.print("Would you like to add extra toppings? (yes/no): ");
         String extraToppingAnswer = scanner.nextLine();
-
         if (extraToppingAnswer.equalsIgnoreCase("yes")) {
             System.out.println("Enter each extra topping. Type 'done' when finished:");
             while (true) {
@@ -242,7 +231,6 @@ public class OrderManager {
         } while (!validSauce);
 
         double totalPrice = basePrice + extraMeatCost + extraCheeseCost;
-
         Sandwich sandwich = new Sandwich(size, meat, cheese, toppings, totalPrice);
         sandwich.setExtraMeat(extraMeat);
         sandwich.setExtraCheese(extraCheese);
@@ -289,6 +277,7 @@ public class OrderManager {
                 System.out.println("Invalid choice. Please enter 1–4.");
             }
         } while (!validDrink);
+
 
         String size = "";
         boolean validSize = false;
@@ -346,7 +335,6 @@ public class OrderManager {
                 System.out.println("Invalid choice. Please enter 1–3.");
             }
         } while (!validChip);
-
         return new Chip(chipType, 1.50);
     }
 }
