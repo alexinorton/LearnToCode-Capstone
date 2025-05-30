@@ -1,0 +1,15 @@
+================== RECEIPT ==================
+- 4" Sandwich: Turkey, American
+  Toppings: [lettuce]
+  Sauce: Vinaigrette
+  + Extra Meat ($0.50)
+  + Extra Cheese ($0.30)
+  + Toasted
+  Total: $5.80
+- Drink: Apple Juice (Large) - $2.50
+- Chips: Sun Chips - $1.50
+---------------------------------------------
+Subtotal:                           $  9.80
+Tax (10%):                          $  0.98
+Total:                              $ 10.78
+=============================================

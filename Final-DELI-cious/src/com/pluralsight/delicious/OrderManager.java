@@ -7,6 +7,8 @@ import java.util.Scanner;
 public class OrderManager {
     private Scanner scanner = new Scanner(System.in);
 
+
+
     public Order createOrder() {
         Order order = new Order();
 
@@ -46,17 +48,20 @@ public class OrderManager {
         return order;
     }
 
+
+
     private Sandwich buildSandwich() {
         int size = 8;
+        String sizeChoice;
         boolean validSize = false;
 
-        while (!validSize) {
+        do {
             System.out.println("\nChoose your sandwich size:");
             System.out.println("1) 4 inch");
             System.out.println("2) 8 inch");
             System.out.println("3) 12 inch");
             System.out.print("Enter your choice: ");
-            String sizeChoice = scanner.nextLine();
+            sizeChoice = scanner.nextLine();
 
             if (sizeChoice.equals("1")) {
                 size = 4;
@@ -70,7 +75,7 @@ public class OrderManager {
             } else {
                 System.out.println("Invalid input. Please enter 1, 2, or 3.");
             }
-        }
+        } while (!validSize);
 
         double basePrice = switch (size) {
             case 4 -> 5.00;
@@ -81,7 +86,8 @@ public class OrderManager {
 
         String meat = "";
         boolean validMeat = false;
-        while (!validMeat) {
+        String meatChoice;
+        do {
             System.out.println("\nChoose your meat:");
             System.out.println("1) Ham");
             System.out.println("2) Turkey");
@@ -90,36 +96,30 @@ public class OrderManager {
             System.out.println("5) Chicken");
             System.out.println("6) Pastrami");
             System.out.print("Enter your choice: ");
-            String meatChoice = scanner.nextLine();
+            meatChoice = scanner.nextLine();
 
-            switch (meatChoice) {
-                case "1" -> {
-                    meat = "Ham";
-                    validMeat = true;
-                }
-                case "2" -> {
-                    meat = "Turkey";
-                    validMeat = true;
-                }
-                case "3" -> {
-                    meat = "Roast Beef";
-                    validMeat = true;
-                }
-                case "4" -> {
-                    meat = "Bacon";
-                    validMeat = true;
-                }
-                case "5" -> {
-                    meat = "Chicken";
-                    validMeat = true;
-                }
-                case "6" -> {
-                    meat = "Pastrami";
-                    validMeat = true;
-                }
-                default -> System.out.println("Invalid choice. Please enter 1–6.");
+            if (meatChoice.equals("1")) {
+                meat = "Ham";
+                validMeat = true;
+            } else if (meatChoice.equals("2")) {
+                meat = "Turkey";
+                validMeat = true;
+            } else if (meatChoice.equals("3")) {
+                meat = "Roast Beef";
+                validMeat = true;
+            } else if (meatChoice.equals("4")) {
+                meat = "Bacon";
+                validMeat = true;
+            } else if (meatChoice.equals("5")) {
+                meat = "Chicken";
+                validMeat = true;
+            } else if (meatChoice.equals("6")) {
+                meat = "Pastrami";
+                validMeat = true;
+            } else {
+                System.out.println("Invalid choice. Please enter 1–6.");
             }
-        }
+        } while (!validMeat);
 
         System.out.print("Would you like extra meat? (yes/no): ");
         String extraMeatInput = scanner.nextLine();
@@ -136,7 +136,8 @@ public class OrderManager {
 
         String cheese = "";
         boolean validCheese = false;
-        while (!validCheese) {
+        String cheeseChoice;
+        do {
             System.out.println("\nChoose your cheese:");
             System.out.println("1) American");
             System.out.println("2) Provolone");
@@ -144,32 +145,27 @@ public class OrderManager {
             System.out.println("4) Swiss");
             System.out.println("5) Pepper Jack");
             System.out.print("Enter your choice: ");
-            String cheeseChoice = scanner.nextLine();
+            cheeseChoice = scanner.nextLine();
 
-            switch (cheeseChoice) {
-                case "1" -> {
-                    cheese = "American";
-                    validCheese = true;
-                }
-                case "2" -> {
-                    cheese = "Provolone";
-                    validCheese = true;
-                }
-                case "3" -> {
-                    cheese = "Cheddar";
-                    validCheese = true;
-                }
-                case "4" -> {
-                    cheese = "Swiss";
-                    validCheese = true;
-                }
-                case "5" -> {
-                    cheese = "Pepper Jack";
-                    validCheese = true;
-                }
-                default -> System.out.println("Invalid choice. Please enter 1–5.");
+            if (cheeseChoice.equals("1")) {
+                cheese = "American";
+                validCheese = true;
+            } else if (cheeseChoice.equals("2")) {
+                cheese = "Provolone";
+                validCheese = true;
+            } else if (cheeseChoice.equals("3")) {
+                cheese = "Cheddar";
+                validCheese = true;
+            } else if (cheeseChoice.equals("4")) {
+                cheese = "Swiss";
+                validCheese = true;
+            } else if (cheeseChoice.equals("5")) {
+                cheese = "Pepper Jack";
+                validCheese = true;
+            } else {
+                System.out.println("Invalid choice. Please enter 1–5.");
             }
-        }
+        } while (!validCheese);
 
         System.out.print("Would you like extra cheese? (yes/no): ");
         String extraCheeseInput = scanner.nextLine();
@@ -183,6 +179,8 @@ public class OrderManager {
                 case 12 -> extraCheeseCost = 0.90;
             }
         }
+
+
 
         ArrayList<String> toppings = new ArrayList<>();
         System.out.println("\nAdd your regular toppings (lettuce, spinach, tomato, pickles, onion, peppers, jalapenos):");
@@ -206,10 +204,10 @@ public class OrderManager {
             }
         }
 
-        // Sauce selection
         String sauce = "";
+        String sauceChoice;
         boolean validSauce = false;
-        while (!validSauce) {
+        do {
             System.out.println("\nChoose your sauce:");
             System.out.println("1) Mayo");
             System.out.println("2) Mustard");
@@ -218,36 +216,30 @@ public class OrderManager {
             System.out.println("5) Thousand Islands");
             System.out.println("6) Vinaigrette");
             System.out.print("Enter your choice: ");
-            String sauceChoice = scanner.nextLine();
+            sauceChoice = scanner.nextLine();
 
-            switch (sauceChoice) {
-                case "1" -> {
-                    sauce = "Mayo";
-                    validSauce = true;
-                }
-                case "2" -> {
-                    sauce = "Mustard";
-                    validSauce = true;
-                }
-                case "3" -> {
-                    sauce = "Ketchup";
-                    validSauce = true;
-                }
-                case "4" -> {
-                    sauce = "Ranch";
-                    validSauce = true;
-                }
-                case "5" -> {
-                    sauce = "Thousand Islands";
-                    validSauce = true;
-                }
-                case "6" -> {
-                    sauce = "Vinaigrette";
-                    validSauce = true;
-                }
-                default -> System.out.println("Invalid choice. Please enter 1–6.");
+            if (sauceChoice.equals("1")) {
+                sauce = "Mayo";
+                validSauce = true;
+            } else if (sauceChoice.equals("2")) {
+                sauce = "Mustard";
+                validSauce = true;
+            } else if (sauceChoice.equals("3")) {
+                sauce = "Ketchup";
+                validSauce = true;
+            } else if (sauceChoice.equals("4")) {
+                sauce = "Ranch";
+                validSauce = true;
+            } else if (sauceChoice.equals("5")) {
+                sauce = "Thousand Islands";
+                validSauce = true;
+            } else if (sauceChoice.equals("6")) {
+                sauce = "Vinaigrette";
+                validSauce = true;
+            } else {
+                System.out.println("Invalid choice. Please enter 1–6.");
             }
-        }
+        } while (!validSauce);
 
         double totalPrice = basePrice + extraMeatCost + extraCheeseCost;
 
@@ -265,96 +257,95 @@ public class OrderManager {
         return sandwich;
     }
 
+
+
+
     private Drink buildDrink() {
         String name = "";
         boolean validDrink = false;
-        while (!validDrink) {
+        String drinkType;
+        do {
             System.out.println("\nChoose a drink:");
             System.out.println("1) Coffee");
             System.out.println("2) Apple Juice");
             System.out.println("3) Water");
             System.out.println("4) Soda");
             System.out.print("Enter your drink choice: ");
-            String drinkType = scanner.nextLine();
+            drinkType = scanner.nextLine();
 
-            switch (drinkType) {
-                case "1" -> {
-                    name = "Coffee";
-                    validDrink = true;
-                }
-                case "2" -> {
-                    name = "Apple Juice";
-                    validDrink = true;
-                }
-                case "3" -> {
-                    name = "Water";
-                    validDrink = true;
-                }
-                case "4" -> {
-                    name = "Soda";
-                    validDrink = true;
-                }
-                default -> System.out.println("Invalid choice. Please enter 1–4.");
+            if (drinkType.equals("1")) {
+                name = "Coffee";
+                validDrink = true;
+            } else if (drinkType.equals("2")) {
+                name = "Apple Juice";
+                validDrink = true;
+            } else if (drinkType.equals("3")) {
+                name = "Water";
+                validDrink = true;
+            } else if (drinkType.equals("4")) {
+                name = "Soda";
+                validDrink = true;
+            } else {
+                System.out.println("Invalid choice. Please enter 1–4.");
             }
-        }
+        } while (!validDrink);
 
         String size = "";
         boolean validSize = false;
-        while (!validSize) {
+        String sizeChoice;
+        do {
             System.out.println("Choose a size:");
             System.out.println("1) Small - $1.50");
             System.out.println("2) Medium - $2.00");
             System.out.println("3) Large - $2.50");
             System.out.print("Enter your size choice: ");
-            String sizeChoice = scanner.nextLine();
+            sizeChoice = scanner.nextLine();
 
-            switch (sizeChoice) {
-                case "1" -> {
-                    size = "Small";
-                    validSize = true;
-                }
-                case "2" -> {
-                    size = "Medium";
-                    validSize = true;
-                }
-                case "3" -> {
-                    size = "Large";
-                    validSize = true;
-                }
-                default -> System.out.println("Invalid size. Please enter 1–3.");
+            if (sizeChoice.equals("1")) {
+                size = "Small";
+                validSize = true;
+            } else if (sizeChoice.equals("2")) {
+                size = "Medium";
+                validSize = true;
+            } else if (sizeChoice.equals("3")) {
+                size = "Large";
+                validSize = true;
+            } else {
+                System.out.println("Invalid size. Please enter 1–3.");
             }
-        }
+        } while (!validSize);
 
         return new Drink(name, size);
     }
 
+
+
+
     private Chip buildChips() {
         String chipType = "";
         boolean validChip = false;
-        while (!validChip) {
+        String choice;
+        do {
             System.out.println("\nChoose a chip:");
             System.out.println("1) Doritos");
             System.out.println("2) Lays");
             System.out.println("3) Sun Chips");
             System.out.print("Enter your choice: ");
-            String choice = scanner.nextLine();
+            choice = scanner.nextLine();
 
-            switch (choice) {
-                case "1" -> {
-                    chipType = "Doritos";
-                    validChip = true;
-                }
-                case "2" -> {
-                    chipType = "Lays";
-                    validChip = true;
-                }
-                case "3" -> {
-                    chipType = "Sun Chips";
-                    validChip = true;
-                }
-                default -> System.out.println("Invalid choice. Please enter 1–3.");
+            if (choice.equals("1")) {
+                chipType = "Doritos";
+                validChip = true;
+            } else if (choice.equals("2")) {
+                chipType = "Lays";
+                validChip = true;
+            } else if (choice.equals("3")) {
+                chipType = "Sun Chips";
+                validChip = true;
+            } else {
+                System.out.println("Invalid choice. Please enter 1–3.");
             }
-        }
+        } while (!validChip);
 
         return new Chip(chipType, 1.50);
     }
