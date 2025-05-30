@@ -40,6 +40,9 @@ Sandwich Builder
 Example Receipt  
 ![Receipt output](https://github.com/user-attachments/assets/2a2c82e5-4efe-4d12-8696-87df019ff71d)
 
+Mermaid Chart
+![Mermaid chart](https://github.com/user-attachments/assets/de090b45-e286-4164-9592-c17e6d17cd59)
+
 
 ---
 
