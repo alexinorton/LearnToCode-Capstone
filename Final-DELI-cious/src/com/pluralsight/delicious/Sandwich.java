@@ -8,6 +8,7 @@ public class Sandwich implements Item {
     private String cheese;
     private List<String> toppings;
     private List<String> extraToppings;
+    private String sauce;
     private double price;
     private boolean extraMeat;
     private boolean extraCheese;
@@ -74,6 +75,14 @@ public class Sandwich implements Item {
         this.toasted = toasted;
     }
 
+    public String getSauce() {
+        return sauce;
+    }
+
+    public void setSauce(String sauce) {
+        this.sauce = sauce;
+    }
+
     @Override
     public String getName() {
         return size + "\" " + meat + " Sandwich";
@@ -83,22 +92,45 @@ public class Sandwich implements Item {
     public String getReceiptText() {
         StringBuilder text = new StringBuilder();
         text.append(size).append("\" Sandwich: ").append(meat).append(", ").append(cheese);
-        text.append(", Toppings: ").append(toppings);
+        text.append("\n  Toppings: ").append(toppings);
 
         if (extraToppings.size() > 0) {
-            text.append(", Extra Toppings: ").append(extraToppings);
-        }
-        if (extraMeat) {
-            text.append(" + extra meat");
-        }
-        if (extraCheese) {
-            text.append(" + extra cheese");
-        }
-        if (toasted) {
-            text.append(", toasted");
+            text.append("\n  Extra Toppings: ").append(extraToppings);
         }
 
-        text.append(String.format(" - $%.2f", price));
+        if (sauce != null && !sauce.isEmpty()) {
+            text.append("\n  Sauce: ").append(sauce);
+        }
+
+        if (extraMeat) {
+            double extraMeatCost = 0.0;
+            if (size == 4) {
+                extraMeatCost = 0.50;
+            } else if (size == 8) {
+                extraMeatCost = 1.00;
+            } else if (size == 12) {
+                extraMeatCost = 1.50;
+            }
+            text.append(String.format("\n  + Extra Meat ($%.2f)", extraMeatCost));
+        }
+
+        if (extraCheese) {
+            double extraCheeseCost = 0.0;
+            if (size == 4) {
+                extraCheeseCost = 0.30;
+            } else if (size == 8) {
+                extraCheeseCost = 0.60;
+            } else if (size == 12) {
+                extraCheeseCost = 0.90;
+            }
+            text.append(String.format("\n  + Extra Cheese ($%.2f)", extraCheeseCost));
+        }
+
+        if (toasted) {
+            text.append("\n  + Toasted");
+        }
+
+        text.append(String.format("\n  Total: $%.2f", price));
         return text.toString();
     }
 

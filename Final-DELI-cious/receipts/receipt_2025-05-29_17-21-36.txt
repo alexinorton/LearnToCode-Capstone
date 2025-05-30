@@ -1,0 +1,12 @@
+================== RECEIPT ==================
+- 4" Sandwich: Roast Beef, Cheddar
+  Toppings: [tomato pickles]
+  Sauce: Ranch
+  Total: $5.00
+- Drink: Apple Juice (Large) - $2.50
+- Chips: Sun Chips - $1.50
+---------------------------------------------
+Subtotal:                           $  9.00
+Tax (10%):                          $  0.90
+Total:                              $  9.90
+=============================================
